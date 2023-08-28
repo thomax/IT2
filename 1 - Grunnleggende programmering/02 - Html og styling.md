@@ -1,7 +1,7 @@
 # 02 - HTML og styling
 
 ## Del mappa di med Thomas
-[ ] Lag en IT2-mapp. Høyreklikk -> Del -> Alle med lenken, kan vise (ikke redigere). Kopier linken og send den på Teams til Thomas
+- [ ] Lag en IT2-mappe. Høyreklikk -> Del -> Alle med lenken, kan vise (ikke redigere). Kopier linken og send den på Teams til Thomas.
 
 ## Oppgaver
 
@@ -40,7 +40,7 @@
 3. Tegn en wireframe som illustrerer hvordan du mener dette vil sånn cirka se ut når det rendres i nettleseren.
 4. Koden inneholder noen bugs, og noen best-practice feil. Hvilke klarer du å få øye på?
 5. Lim koden inn i ChatGPT eller en annen chatbot, og be den hjelpe deg med å finne feil i koden. Fant den noen feil du ikke hadde sett?
-6. Opprett fila mappa `1 - Grunnleggende programmering` og lag en fil oppi der som heter `02 - Superduo.html`. I denne fila skal du:
+6. Opprett mappa `1 - Grunnleggende programmering` og lag en fil oppi der som heter `02 - Superduo.html`. I denne fila skal du:
 
 	1. Lag en webside som viser superduobildet vi lagde i forrige økt, i full bredde. Men sørg for at bildet ikke er høyere enn skjermens høyde. Du skal kunne se hele bildet i størst mulig format.
 	2. Sett margin 10px på bildet.
