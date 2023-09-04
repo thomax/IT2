@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05 - JavaScript basics</title>
+  <style>
+    .task {
+      margin: 10px;
+      padding: 10px;
+      background-color: antiquewhite;
+      border: 2px solid gray;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>05 - JavaScript basics</h1>
+
+  <div class="task">
+    <h2>Oppgave 1</h2>
+    <p>[Forklar hva som foregår her]</p>
+    <script>
+      const pi = 3.14
+      console.log('1 - pi', pi)
+    </script>
+    <pre></pre>
+  </div>
+
+  <div class="task">
+    <h2>Oppgave 2</h2>
+    <p>[Forklar hva som foregår her]</p>
+    <script>
+      let number = 3
+      console.log('2 - number', number)
+      number = number / 2
+      console.log('2 - half number', number)
+    </script>
+    <pre></pre>
+  </div>
+
+
+  <script>
+
+    const divs = document.querySelectorAll('div.task')
+    divs.forEach((div) => {
+      const sourceScript = div.querySelector('script')
+      const targetPre = div.querySelector('pre')
+      targetPre.textContent = sourceScript.textContent
+    })
+  </script>
+
+</body>
+</html>
