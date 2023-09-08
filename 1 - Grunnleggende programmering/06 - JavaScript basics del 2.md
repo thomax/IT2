@@ -42,8 +42,7 @@ Hvis du ikke allerede har en mappe som heter `1 - Grunnleggende programmering`, 
       <h2>Oppgave 1</h2>
       <p>[Forklar hva som foregår her]</p>
       <script>
-        const pi = 3.14
-        console.log('1: pi', pi)
+        // her er løsningen
       </script>
       <pre></pre>
     </div>
