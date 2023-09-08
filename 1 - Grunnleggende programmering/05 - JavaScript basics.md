@@ -13,7 +13,7 @@ Målet de neste ukene er å beherske grunnleggende JavaScript. For å komme dit 
   - Med og uten parametere
   - Med og uten return
 - Skrive JS-kode i `<script>`-element som brukes i HTML
-- Skrive JS-kode i en egen `.js`-fil som du kan kjøre fra teminalen (f.eks. slik `node kode-jeg-har-skrevet.js`)
+- Skrive JS-kode i en egen `.js`-fil som du kan kjøre fra terminalen (f.eks. slik `node kode-jeg-har-skrevet.js`)
 
 
 ## Oppgaver
