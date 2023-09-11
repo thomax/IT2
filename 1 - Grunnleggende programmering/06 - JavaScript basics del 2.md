@@ -75,6 +75,6 @@ Oppgavene blir gradvis vanskeligere fra 1-6. Fra oppgave 7 og utover finner du n
 
 6. Lag en ny versjon av den forrige funksjonen. Men du har to inputfelt der brukeren kan gi innhold til name og nickname. Når brukeren trykker på en submit-knapp, kalles funksjonen og resultatet vises på siden i html (f.eks. i en `<div>`).
 7. Skriv en funksjon `calculateArea(radius)` som tar et tall som parameter. Funksjonen kalkulerer og returnerer arealet av en sirkel. Kall funksjonen og bruk console.log som ouput.
-8. Skriv en funksjon `today()`. Funksjonen returnerer navnet på ukedagen. Tips: Bruk `new Date()` og [getDay](https://www.w3schools.com/jsref/jsref_getday.asp). Kall funksjonen og bruk console.log som skriver ut `Det er [UKEDAG] idag`.
+8. Skriv en funksjon `today()`. Funksjonen returnerer navnet på ukedagen. Tips: Bruk `new Date()`, `getDay` og et array med navnet på ukedagene. Kall funksjonen og bruk console.log som skriver ut `Det er [UKEDAG] idag`.
 9. Skriv en funksjon `randomNumber(min, max)` som tar to tall som parametere og returnerer et tilfeldig tall f.o.m. `min` t.o.m. `max`. Kall funksjonen og bruk console.log som ouput. Prøv å gjøre denne uten chatbot, men ved å slå opp hvordan `Math.random` funker 🤖
 
