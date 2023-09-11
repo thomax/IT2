@@ -1,23 +1,19 @@
-# 08 - Oppgave: MatchMetrics
+# 09 - Oppgave: MatchMetrics
 
 ## Målet med denne oppgaven
 
 - Ta imot, analysere og presentere data fra ekte brukere
-- Ryddig kode, der variable og funksjoner kommuniserer tydelig hva som foregår
-- Lage en morsom og spennende app, og samtidig ta høyde for mulige konsekvenser av teknologien
+- Kunne levere et oversiktlig prosjekt, der README og ryddig kode kommuniserer tydelig hva som foregår
+- Lage en morsom og spennende app, og samtidig ta høyde for hvordan andre mennesker kan oppleve av teknologien
 
 ## Absolutte krav
 Frist: xx.xx.xxxx
-Innleveringen består av to separate ting:
+Innleveringen består av to separate ting
 
 1. Selve appen
     - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/MatchMetrics/`
     - Appen starter opp når man kjører `npm start`
-2. En en fil ved navn `2 - Interaktiv web/MatchMetrics/README.md` som inneholder:
-    - Beskrivelse av appen
-    - Viser wireframes som illustrerer layout
-    - Designvalg du har gjort underveis
-    - Refleksjon rundt hva du mener appen mangler, og hva du ville gjort anderledes dersom du skulle gjøre dette igjen
+2. En en fil ved navn `2 - Interaktiv web/MatchMetrics/README.md` som inneholder en beskrivelse av appen og prosessen.
 
 ## Kravspesifikasjon
 
@@ -31,8 +27,13 @@ Appen heter MatchMetrics, og samler inn diverse brukerdata. Disse dataene behand
     - Check boxes
 - Analyser data-ene
     - Algoritmen som analyserer data-ene er tydelig dokumentert
-- Presenter resultatet
-- Info om hvem som står bak appen
+- Presenter resultatet til brukeren
+- Appen inneholder info om hvem som står bak
+- Prosjektet inneholder en Readme med:
+    - Beskrivelse av appen
+    - Viser wireframes som illustrerer layout
+    - Designvalg du har gjort underveis
+    - Refleksjon rundt hva du mener appen mangler, og hva du ville gjort anderledes dersom du skulle gjøre dette igjen
 
 ## Ekstra goodies
 
