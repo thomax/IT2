@@ -10,40 +10,40 @@
 Frist: xx.xx.xxxx
 Innleveringen består av to separate ting:
 
-1. En en fil ved navn `2 - Interaktiv web/MatchMetrics/README.md` som inneholder:
-  - Beskrivelse av appen
-  - Viser wireframes som illustrerer layout
-  - Designvalg du har gjort underveis
-  - Mangler og hva du ville gjort anderledes
-2. Selve appen
-  - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/MatchMetrics/`
-  - Appen starter opp når man kjører `npm start`
-
+1. Selve appen
+    - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/MatchMetrics/`
+    - Appen starter opp når man kjører `npm start`
+2. En en fil ved navn `2 - Interaktiv web/MatchMetrics/README.md` som inneholder:
+    - Beskrivelse av appen
+    - Viser wireframes som illustrerer layout
+    - Designvalg du har gjort underveis
+    - Mangler og hva du ville gjort anderledes
 
 ## Kravspesifikasjon
 
-Appen heter MatchMetrics, og samler inn diverse brukerdata. Disse dataene kjøres gjennom en algoritme som produserer en score. Denne scoren er ment å indikere (på en humoristisk og godlynt måte) hvor bra match brukeren er som kjærste (evt. bestevenn).
+Appen heter MatchMetrics, og samler inn diverse brukerdata. Disse dataene behandles i en algoritme som produserer en poengsum. Denne poengsummen er ment å indikere (på en humoristisk og godlynt måte) hvor bra match brukeren er som kjærste (evt. bestevenn).
 
 - Lag en web app med Svelte.js
 - Ta i mot ulik input fra brukeren, minst fem ulike inputs, inkludert:
-  - Range
-  - Dropdown
-  - Radio buttons
-  - Check boxes
+    - Range
+    - Dropdown
+    - Radio buttons
+    - Check boxes
 - Analyser data-ene
-  - Algoritmen som analyserer data-ene er tydelig dokumentert
+    - Algoritmen som analyserer data-ene er tydelig dokumentert
 - Presenter resultatet
 - Info om hvem som står bak appen
 
 ## Ekstra goodies
+
 - Dele-knapp slik at brukeren lett kan tipse venner om appen
-- Deploya på Vercel (eller Netlify eller annen provider)
+- Deploy på Vercel (eller Netlify eller annen provider) slik at appen er tilgjengelig fra Internett
 - En backend som tar i mot og aggregerer anonymiserte data
 - Annet?
 
 ## Vurderingskriterier
 
-|              | ⭐️        | ⭐️⭐️       | ⭐️⭐️⭐️       |
+|              | ⭐️       | ⭐️⭐️      | ⭐️⭐️⭐️    |
 |--------------|-----------|-----------|-------------|
 | Virker appen?  | Nei/omtrent ikke | Stort sett  | Ja |
 | Funker på smal og bred skjerm | Nei/omtrent ikke | Stort sett | Ja |
