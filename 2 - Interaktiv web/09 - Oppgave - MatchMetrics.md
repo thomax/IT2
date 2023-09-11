@@ -17,7 +17,7 @@ Innleveringen består av to separate ting:
     - Beskrivelse av appen
     - Viser wireframes som illustrerer layout
     - Designvalg du har gjort underveis
-    - Mangler og hva du ville gjort anderledes
+    - Refleksjon rundt hva du mener appen mangler, og hva du ville gjort anderledes dersom du skulle gjøre dette igjen
 
 ## Kravspesifikasjon
 
