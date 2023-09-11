@@ -27,8 +27,9 @@ Lag en mappe `2 - Interaktiv web/`. Oppi der lager du en ny mappe som heter `07 
 2. Lag en input der brukeren kan oppgi alderen sin ved å dra i en slider (range input) og oppgi et tall mellom `12` og `100`. Default-verdi er `18`.
 3. Lag en input der brukeren kan oppgi hvilken måned hen er født i. Velg selv om du vil løse dette med en dropdown (aka "rullgardinmeny").
 4. Lag en input der brukeren kan velge "ja", "nei" eller "kanskje litt" med radio-knapper
-5. Lag en rekke med checkboxer der brukeren kan huke av for favoritt-tilbehør på taco. Minimum 8 ulike ingredienser. Pynt alternativene med emojis, om du er i det humøret 🥳
+5. Lag en rekke med checkboxer der brukeren kan huke av for favoritt-tilbehør på taco. Minimum 8 ulike ingredienser.
 
+## Ressurser
 
 |Nyttige steder steder å hente mer kunnskap om Svelte.js|
 |----|
