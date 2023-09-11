@@ -18,6 +18,8 @@ Målet de neste ukene er å beherske grunnleggende JavaScript. For å komme dit 
 
 Hvis du ikke allerede har en mappe som heter `1 - Grunnleggende programmering`, lag en slik. Deretter lager du en fil oppi den mappa som heter `06 - JavaScript basics del 2.html`. Start med følgende kode i den fila:
 
+Oppgavene blir gradvis vanskeligere fra 1-6. Fra oppgave 7 og utover finner du noen flere enkle oppgaver der du får trent på funksjoner.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -71,4 +73,8 @@ Hvis du ikke allerede har en mappe som heter `1 - Grunnleggende programmering`, 
 - bytte ut alle mellomrom ` ` med underscore `_`
   Funksjonen returnerer det endrete objektet. Skriv resultatet av funksjonskallet med `console.log`.
 
-6. Lag en ny versjon av den forrige funksjonen. Men du har to inputfelt der brukeren kan gi innhold til name og nickname. Når brukeren trykker på en submit-knapp, kalles funksjonen og resultatet vises på siden i html.
+6. Lag en ny versjon av den forrige funksjonen. Men du har to inputfelt der brukeren kan gi innhold til name og nickname. Når brukeren trykker på en submit-knapp, kalles funksjonen og resultatet vises på siden i html (f.eks. i en `<div>`).
+7. Skriv en funksjon `calculateArea(radius)` som tar et tall som parameter. Funksjonen kalkulerer og returnerer arealet av en sirkel. Kall funksjonen og bruk console.log som ouput.
+8. Skriv en funksjon `today()`. Funksjonen returnerer navnet på ukedagen. Tips: Bruk `new Date()` og [getDay](https://www.w3schools.com/jsref/jsref_getday.asp). Kall funksjonen og bruk console.log som skriver ut `Det er [UKEDAG] idag`.
+9. Skriv en funksjon `randomNumber(min, max)` som tar to tall som parametere og returnerer et tilfeldig tall f.o.m. `min` t.o.m. `max`. Kall funksjonen og bruk console.log som ouput. Prøv å gjøre denne uten chatbot, men ved å slå opp hvordan `Math.random` funker 🤖
+
