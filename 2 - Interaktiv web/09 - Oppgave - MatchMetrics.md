@@ -10,7 +10,7 @@
 Frist: xx.xx.xxxx
 Innleveringen består av to separate ting
 
-`const appName = MatchMetrics || Valgomat`
+`const appName = "MatchMetrics" || "Valgomat"`
 
 1. Selve appen
     - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/appName/`
