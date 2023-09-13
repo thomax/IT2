@@ -1,4 +1,4 @@
-# 09 - Oppgave: MatchMetrics
+# 09 - Oppgave: MatchMetrics eller Valgomat
 
 ## Målet med denne oppgaven
 
@@ -10,17 +10,23 @@
 Frist: xx.xx.xxxx
 Innleveringen består av to separate ting
 
+`const appName = MatchMetrics || Valgomat`
+
 1. Selve appen
-    - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/MatchMetrics/`
+    - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/appName/`
     - Appen starter opp når man kjører `npm start`
-2. En en fil ved navn `2 - Interaktiv web/MatchMetrics/README.md` som inneholder en beskrivelse av appen og prosessen.
+2. En en fil ved navn `2 - Interaktiv web/appName/README.md` som inneholder en beskrivelse av appen og prosessen.
 
 ## Kravspesifikasjon
 
-Appen heter MatchMetrics, og samler inn diverse brukerdata. Disse dataene behandles i en algoritme som produserer en poengsum. Denne poengsummen er ment å indikere (på en humoristisk og godlynt måte) hvor bra match brukeren er som kjærste (evt. bestevenn).
+### MatchMetrics
+Appen heter MatchMetrics, og samler inn diverse brukerdata. Disse dataene behandles i en algoritme som produserer en poengsum. Denne poengsummen er ment å indikere (på en humoristisk og godlynt måte) hvor bra match brukeren er som kjærste (evt. bestevenn). Dette er subjektivt, men må "gi mening" (mao ikke bare random score).
+
+### Valgomat
+Appen heter Valgomat, og samler inn diverse brukerdata, i form av spørsmål om politiske enkeltsaker. Disse dataene behandles i en algoritme som produserer en ranking av hvilke partier brukeren en mest enig med. Objektivitet er viktig.
 
 - Lag en web app med Svelte.js
-- Ta i mot ulik input fra brukeren, minst fem ulike inputs, inkludert:
+- Ta i mot ulik input fra brukeren, minst 5 ulike inputs, inkludert:
     - Range
     - Dropdown
     - Radio buttons
@@ -40,6 +46,7 @@ Appen heter MatchMetrics, og samler inn diverse brukerdata. Disse dataene behand
 - Dele-knapp slik at brukeren lett kan tipse venner om appen
 - Deploy på Vercel (eller Netlify eller annen provider) slik at appen er tilgjengelig fra Internett
 - En backend som tar i mot og aggregerer anonymiserte data
+- En fin nettside som presenterer appen
 - Annet?
 
 ## Vurderingskriterier
