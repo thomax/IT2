@@ -13,8 +13,8 @@ Målet de neste ukene er å lage en web app med Svelte. For å komme dit må vi:
 Lag en mappe `2 - Interaktiv web/`. Oppi der lager du en ny mappe som heter `08 - Hello Svelte`.
 
 1. Åpne terminalen og `cd` til du kommer til `2 - Interaktiv web/`
-2. Skriv `npm create vite@latest my-first-svelte-app -- --template svelte`
-3. Skriv `cd my-first-svelte-app`
+2. Skriv `npm create vite@latest svelte-user-input-app -- --template svelte`
+3. Skriv `cd svelte-user-input-app`
 4. Skriv `npm install`
 5. Skriv `npm run dev`
 6. I nettleseren, gå til http://localhost:5173
