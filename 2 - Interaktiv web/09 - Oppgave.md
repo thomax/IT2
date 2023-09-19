@@ -7,15 +7,15 @@
 - Lage en morsom og spennende app, og samtidig ta høyde for hvordan andre mennesker kan oppleve av teknologien
 
 ## Absolutte krav
-Frist: xx.xx.xxxx
+Frist: 27.09.2023
 Innleveringen består av to separate ting
 
 `const appName = "MatchMetrics" || "Valgomat"`
 
 1. Selve appen
-    - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/appName/`
+    - Alt som hører til oppgaven ligger i mappa `2 - Interaktiv web/${appName}/`
     - Appen starter opp når man kjører `npm start`
-2. En en fil ved navn `2 - Interaktiv web/appName/README.md` som inneholder en beskrivelse av appen og prosessen.
+2. En en fil ved navn `2 - Interaktiv web/${appName}/README.md` som inneholder dokumentasjon av appen og prosessen.
 
 ## Kravspesifikasjon
 
