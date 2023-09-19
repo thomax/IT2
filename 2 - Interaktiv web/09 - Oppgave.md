@@ -7,7 +7,7 @@
 - Lage en morsom og spennende app, og samtidig ta høyde for hvordan andre mennesker kan oppleve av teknologien
 
 ## Absolutte krav
-Frist: 27.09.2023
+Frist: 03.10.2023
 Innleveringen består av to separate ting
 
 `const appName = "MatchMetrics" || "Valgomat"`
@@ -35,7 +35,7 @@ Appen heter Valgomat, og samler inn diverse brukerdata, i form av spørsmål om 
     - Algoritmen som analyserer data-ene er tydelig dokumentert
 - Presenter resultatet til brukeren
 - Appen inneholder info om hvem som står bak
-- Prosjektet inneholder en Readme med:
+- Prosjektet inneholder en Readme.md (på [markdown-format](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)) med:
     - Beskrivelse av appen
     - Viser wireframes som illustrerer layout
     - Designvalg du har gjort underveis
