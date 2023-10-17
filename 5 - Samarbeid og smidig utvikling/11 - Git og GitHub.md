@@ -14,7 +14,7 @@ Mål med økta:
 ## Git
 Last ned og installer [Git](https://git-scm.com/download/win).
 
-Hva er greia med [Git](https://git-scm.com/download/win)? Opprett en mappe som heter ´5 - Samarbeid og smidig utvikling´ og en fil i den mappa fil som heter ´git-notater.md´  
+Hva er greia med [Git](https://git-scm.com/download/win)? Opprett en mappe som heter `5 - Samarbeid og smidig utvikling` og en fil i den mappa fil som heter `git-notater.md` 
 
 Se først [denne videoen](https://www.youtube.com/watch?v=2ReR1YJrNOM) på 2 minutter uten å ta notater, bare for å få et overblikk.
 
