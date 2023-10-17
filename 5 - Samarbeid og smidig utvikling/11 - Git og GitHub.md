@@ -9,6 +9,8 @@ Mål med økta:
 - Erfaring med å bruke github
 - Du har en bruker på github og du har kode i et repository på github  
 
+![Learning git](./learning_git.png)
+
 ## Git
 Last ned og installer [Git](https://git-scm.com/download/win).
 
@@ -32,3 +34,7 @@ Kikk innom [markdown Cheat Sheet](https://github.com/adam-p/markdown-here/wiki/M
 7. Bruk `add`, `commit` og `push` slik du har lært deg selv lenger opp, til å pushe den nye koden din til github.
 8. OMG high five, velkommen til stedet der alle utviklere i hele verden deler kode, bug reports og ideer!
 9. Del link til dette repoet med thomas :)
+
+## Neste gang..
+
+...skal vi lage bruker på https://vercel.com og deploye appen slik at den blir tilgjengelig på Internett. Og ny versjoner oppdateres automatisk når du pusher ny kode til github.
