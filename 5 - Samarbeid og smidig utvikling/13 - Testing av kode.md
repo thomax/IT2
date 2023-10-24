@@ -26,7 +26,7 @@ export const sum = (a, b) => {
 5. Lag en ny fil i den mappa som heter `utils.test.js` og legg til følgende kode:
 
 ```js
-import { expect, test } from 'vitest'
+import {expect, test} from 'vitest'
 import {sum} from '../src/lib/utils.js'
 
 test('adds 1 + 2 to equal 3', () => {
@@ -35,8 +35,18 @@ test('adds 1 + 2 to equal 3', () => {
 })
 ```
 
+6. I `package.json`, legg til en ny linje under "scripts":
+
+```json
+"scripts": {
+  "test": "vitest"
+  // dev, build...andre greier
+}
+```
+
+6. I terminalen, skriv `npm run test` 
 6. Å nei!! Testen feiler! Funksjonen vår `sum` returnerer en string `"nope"` istedet for number `3`. Your mission, should you choose to accept it: Fix the `sum` function so the test passes.
 7. Skriv en ny test i `utils.test.js` som sjekker at 11+999 gir korrekt resultat.
 8. Skriv en ny test i `utils.test.js` som sjekker at 50-9 gir korrekt resultat.
 9. Okay. Da har vi kontroll på `sum` funksjonen. La os gjøre noe nyttig. Finn en funksjon i Valgomat/MatchMetrics-prosjektet - f.eks. `calculateTotalScore()` som du flytter ut til `utils.js` og eksporter den på samme måte som `sum`-funksjonen. For at ikke `App.svelte` skal knekke nå, må den importere den flyttete funksjonen på samme måte som `utils.test.js` importerer sum.
-10. Skriv fire tester som sjekker at `calculateTotalScore()` funker som den skal.
+10. Skriv fire tester som sjekker at `calculateTotalScore()` funker som den skal. Det finnes flere matchers enn `toBe()`, her er [en fin dokumentasjon](https://jestjs.io/docs/using-matchers). 
