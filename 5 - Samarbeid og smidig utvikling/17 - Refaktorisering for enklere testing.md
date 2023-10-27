@@ -10,7 +10,7 @@
 
 ## Vitest
 
-Hvis du ikke har installert [Vitest](https://vitest.dev) i Valgomat/MatchMetrics-prosjektet ditt, [gå tilbake til forrige økt](./13%20-%20Testing%20av%20kode.md) og gjør det.
+Hvis du ikke har installert [Vitest](https://vitest.dev) i Valgomat/MatchMetrics-prosjektet ditt, [gå tilbake til forrige økt](./16%20-%20Testing%20av%20kode.md) og gjør det.
 
 1. Finn en funksjon i Valgomat/MatchMetrics-prosjektet - f.eks. `calculateTotalScore()`. Dette må skje i to steg:
   - Pass for at `calculateTotalScore()`-funksjonen ikke er avhengig av globale variable. Pass på at:

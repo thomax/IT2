@@ -12,7 +12,7 @@
 
 ## Git og GitHub
 
-Sjekk at du har fått gjort alle [punktene fra forrige økt](./11%20-%20Git%20og%20GitHub.md). Deretter:
+Sjekk at du har fått gjort alle [punktene fra forrige økt](./14%20-%20Versjonskontroll%20med%20Git%20og%20GitHub.md). Deretter:
 
 ## Deploy til Vercel
 

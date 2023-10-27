@@ -33,7 +33,7 @@ Kikk innom [Markdown Cheat Sheet](https://github.com/adam-p/markdown-here/wiki/M
 6. Åpne denne mappa i VSCode og lag en `index.html` fil som sier noe sånt som "Yes! Jeg er på github!!!1!!11!"
 7. Bruk `add`, `commit` og `push` slik du har lært deg selv lenger opp, til å pushe den nye koden din (index.html) til hello-world repository-et i github.
 8. OMG high five, velkommen til stedet der alle utviklere i hele verden deler kode, bug reports og ideer!
-9. Del link til dette repoet med thomas :)
+9. Del link til dette repoet med Thomas :)
 
 ## Neste gang..
 
