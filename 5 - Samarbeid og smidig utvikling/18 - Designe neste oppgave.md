@@ -19,7 +19,7 @@ Finn minst én funksjon tili Valgomat/MatchMetrics-prosjektet som egner seg for 
 
 ## Designe neste oppgave
 
-Vi finner ut sammen hva neste oppgave går ut på. Vi prøver å jobbe i random grupper på 2 og 2. Hver gruppe kommer med utkaset i form av en PowerPoint:
+Vi finner ut sammen hva neste oppgave går ut på. Vi jobber i random grupper på 2 og 2. Hver gruppe kommer med utkaset i form av en PowerPoint:
 
 - Tema: Vi kan gjøre akkurat hva vi vil, her er noen sjangere: fantasy, krim, steampunk, mafia, sci-fi, post-apokalyptisk, mordmysterie på Vika, annet?
 - Foreslå minst 2 temaer
