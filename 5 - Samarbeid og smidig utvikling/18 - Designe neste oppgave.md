@@ -24,7 +24,7 @@ Vi finner ut sammen hva neste oppgave går ut på. Vi jobber i random grupper p�
 - Tema: Vi kan gjøre akkurat hva vi vil, her er noen sjangere: fantasy, krim, steampunk, mafia, sci-fi, post-apokalyptisk, mordmysterie på Vika, annet?
 - Foreslå minst 2 temaer
 - For hvert tema dere foreslår at kan funke:
-  - Foreslå hvordan suksess avgjøres i spillet (poeng? penger? å overleve?)
+  - Foreslå hvordan suksess avgjøres i spillet (poeng? penger? å overleve? minst mulig fravær?)
   - Foreslå minst 4 locations (steder) som spilleren kan besøke, og hva som er på den location, inkludert wireframes
   - Foreslå stats (strength, charisma, hp, luck, penger, karma, inventory, hvem vet?) som character sheet skal inneholde
   - Andre features? High-score liste? Noe multiplayer-aktig?
