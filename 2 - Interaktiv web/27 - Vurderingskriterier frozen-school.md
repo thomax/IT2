@@ -1,7 +1,7 @@
 # 27 - Frozen School ferdig!
 
 
-## Vurderingskriterier
+## Suksesskriterier
 
 |              | ⭐️       | ⭐️⭐️      | ⭐️⭐️⭐️    |
 |--------------|-----------|-----------|-------------|
