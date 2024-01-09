@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eksamen v22</title>
+  <style>
+
+    #mainContainer {
+      position: relative;
+    }
+
+    .map {
+      width: 100%;
+      height: auto;
+    }
+
+    .bikeContainer {
+      position: absolute;
+    }
+
+    .bar {
+      width: 0%;
+      margin-top: -4px;
+      height: 10px;
+      background-color: rgba(60, 220, 60, 0.8);
+    }
+  </style>
+</head>
+
+<body>  
+  <div id="mainContainer">
+    <img src="kartutsnitt.png" alt="Kartutsnitt" class="map">
+  </div>
+  
+  <script>
+    const bikes = []
+    const numberOfBikes = 10
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
+    function createBikes() {
+      for (let i = 0; i < numberOfBikes; i++) {
+        const bike = {
+          x: random(10, 90),
+          y: random(10, 90),
+          charge: random(1, 100)
+        }
+        bikes.push(bike)
+      }
+    }
+
+    function placeBikesOnMap() {
+      const mainContainer = document.querySelector("#mainContainer")
+      for (let bikeIndex = 0; bikeIndex < bikes.length; bikeIndex++) {
+        const bike = bikes[bikeIndex]
+        const bikeContainer = document.createElement("div")
+        bikeContainer.classList.add("bikeContainer")
+        bikeContainer.setAttribute("onmouseover", `handleMouseoverBike(${bikeIndex})`)
+        bikeContainer.setAttribute("onmouseout", `handleMouseoutBike(${bikeIndex})`)
+        bikeContainer.innerHTML = `<div class="bike"><img src="ikon.png" alt="Bike"></div><div class="bar" id="bar${bikeIndex}"></div>`
+        bikeContainer.style.left = bike.x + "%"
+        bikeContainer.style.top = bike.y + "%"
+        mainContainer.appendChild(bikeContainer)
+      }
+    }
+
+    function handleMouseoverBike(bikeIndex) {
+      const bike = bikes[bikeIndex]
+      const bar = document.querySelector(`#bar${bikeIndex}`)
+      bar.style.transition = "width 2s"
+      bar.style.width = `${bike.charge}%`
+    }
+
+    function handleMouseoutBike(bikeIndex) {
+      const bar = document.querySelector(`#bar${bikeIndex}`)
+      bar.style.transition = "none"
+      bar.style.width = "0%"
+    }
+
+    createBikes()
+    placeBikesOnMap()
+  </script>
+
+</body>
+</html>
