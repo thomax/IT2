@@ -23,33 +23,23 @@
       width: 0%;
       margin-top: -4px;
       height: 10px;
-      background-color: rgba(60, 220, 60, 0.8);
+      background-color: rgba(9, 177, 9, 0.8);
     }
   </style>
 </head>
 
 <body>  
-  <div id="mainContainer">
+  <div id="mainContainer" onmouseover>
     <img src="kartutsnitt.png" alt="Kartutsnitt" class="map">
   </div>
   
   <script>
     const bikes = []
-    const numberOfBikes = 10
-
-    function random(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min)
-    }
 
     function createBikes() {
-      for (let i = 0; i < numberOfBikes; i++) {
-        const bike = {
-          x: random(10, 90),
-          y: random(10, 90),
-          charge: random(1, 100)
-        }
-        bikes.push(bike)
-      }
+      bikes.push({x: 100, y: 20, charge: 20})
+      bikes.push({x: 80, y: 17, charge: 45})
+      bikes.push({x: 60, y: 70, charge: 75})
     }
 
     function placeBikesOnMap() {
