@@ -10,6 +10,34 @@
       position: relative;
     }
 
+    #feedbackContainer {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      max-width: 350px;
+      background-color: rgba(255, 255, 255, 0.9);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      border: 2px solid rgba(100, 100, 100, 0.7);
+      border-radius: 3px;
+      padding: 0px 15px 15px 15px;
+      visibility: hidden;
+    }
+
+    #feedbackSummaryContainer {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 360px;
+      max-width: 350px;
+      background-color: rgba(255, 255, 255, 0.9);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      border: 2px solid rgba(100, 100, 100, 0.7);
+      border-radius: 3px;
+      padding: 0px 15px 15px 15px;
+      visibility: hidden;
+    }
+
     .map {
       width: 100%;
       height: auto;
@@ -25,31 +53,68 @@
       height: 10px;
       background-color: rgba(9, 177, 9, 0.8);
     }
+    hr {
+      opacity: 0.2;
+    }
+    .summaryLabel {
+      font-weight: bold;
+    }
   </style>
 </head>
 
 <body>  
   <div id="mainContainer">
     <img src="kartutsnitt.png" alt="Kartutsnitt" class="map">
+    <div id="feedbackContainer">
+      <form name="feedbackForm" onsubmit="validateForm()" method="post">
+        <h2>Farge</h2>
+        <div>
+          <input type="radio" name="colors" value="red">
+          <label for="html">Rød</label><br>
+          <input type="radio" name="colors" value="yellow">
+          <label for="css">Gul</label><br>
+          <input type="radio" name="colors" value="blue">
+          <label for="javascript">Blå</label> 
+        </div>
+        <h2>Til hinder for..</h2>
+        <div>
+          <input type="checkbox" name="pedestrians" />
+          <label for="pedestrians">Gående</label>
+          <input type="checkbox" name="vehicles" />
+          <label for="vehicles">Kjøretøy</label>
+          <input type="checkbox" name="traffic" />
+          <label for="traffic">Trafikk</label>
+        </div>
+        <h2>Kommentar</h2>
+        <textarea id="comment" name="comment" rows="4" cols="40"></textarea>
+        <hr/>
+      </form>
+      <button onclick="submitForm()">Send inn</button>
+      <button onclick="handleCancel()">Avbryt</button>
+    </div>
+
+    <div id="feedbackSummaryContainer">
+      <div id="feedbackSummary"></div>
+      <hr/>
+      <button onclick="toggleSummary(false)">Ok</button>
+    </div>
   </div>
   
   <script>
-    const bikes = []
-    const numberOfBikes = 10
-
-    function random(min, max) {
-      return Math.floor(min + Math.random() * (max - min + 1))
+    const dictionary = {
+      "yellow": "Gul",
+      "red": "Rød",
+      "blue": "Blå",
+      "pedestrians": "Fotgjengere",
+      "vehicles": "Kjøretøy",
+      "traffic": "Trafikk"
     }
+    const bikes = []
 
     function createBikes() {
-      for (let i = 0; i < numberOfBikes; i++) {
-        const bike = {
-          x: random(10, 90),
-          y: random(10, 90),
-          charge: random(1, 100)          
-        }
-        bikes.push(bike)
-      }
+      bikes.push({x: 15, y: 20, charge: 20})
+      bikes.push({x: 80, y: 17, charge: 45})
+      bikes.push({x: 60, y: 70, charge: 75})
     }
 
     function placeBikesOnMap() {
@@ -58,9 +123,9 @@
         const bike = bikes[bikeIndex]
         const bikeContainer = document.createElement("div")
         bikeContainer.classList.add("bikeContainer")
-        
         bikeContainer.setAttribute("onmouseover", `handleMouseoverBike(${bikeIndex})`)
         bikeContainer.setAttribute("onmouseout", `handleMouseoutBike(${bikeIndex})`)
+        bikeContainer.setAttribute("onclick", `handleClickBike(${bikeIndex})`)
         bikeContainer.innerHTML = `<div class="bike"><img src="ikon.png" alt="Bike"></div><div class="bar" id="bar${bikeIndex}"></div>`
         bikeContainer.style.left = bike.x + "%"
         bikeContainer.style.top = bike.y + "%"
@@ -79,6 +144,76 @@
       const bar = document.querySelector(`#bar${bikeIndex}`)
       bar.style.transition = "none"
       bar.style.width = "0%"
+    }
+
+    function handleClickBike(bikeIndex) {
+      const bike = bikes[bikeIndex]
+      const feedbackContainer = document.querySelector("#feedbackContainer")
+      feedbackContainer.style.visibility = "visible"
+    }
+
+    function toggleSummary(enableSummary) {
+      const {selectedColor, problems, comment} = validateForm()
+      const feedbackSummaryContainer = document.querySelector("#feedbackSummaryContainer")
+      feedbackSummaryContainer.style.visibility = enableSummary ? "visible" : "hidden"
+      const feedbackSummary = document.querySelector("#feedbackSummary")
+
+      if (enableSummary) {
+        feedbackSummary.innerHTML = `
+          <h2>Oppsummering</h2>
+          <span class="summaryLabel">Farge: </span><span>${selectedColor}</span><br>
+          <span class="summaryLabel">Til hinder for: </span><span>${problems.join(", ")}</span><br>
+          <span class="summaryLabel">Kommentar: </span><span>${comment}</span>
+          `
+      } else {
+        feedbackSummary.innerHTML = ""
+      }
+    }
+
+    function submitForm() {
+      const {isValid} = validateForm()
+      if (!isValid) {
+        alert("Du må velge en farge")
+        return
+      } else {
+        toggleSummary(true)
+      }
+    }
+
+    function validateForm() {
+      const form = document.feedbackForm
+      // handle colors
+      const colors = form.colors
+      let selectedColor
+      for (let i = 0; i < colors.length; i++) {
+        if (colors[i].checked) {
+          selectedColor = dictionary[colors[i].value]
+        }
+      }
+      if (!selectedColor) {
+        return {isValid: false}
+      }
+      // handle parking
+      const potentialProblems = ["pedestrians", "vehicles", "traffic"]
+      let problems = []
+      if (form.pedestrians.checked) {
+        problems.push(dictionary.pedestrians)
+      }
+      if (form.vehicles.checked) {
+        problems.push(dictionary.vehicles)
+      }
+      if (form.traffic.checked) {
+        problems.push(dictionary.traffic)
+      }
+      // handle comment
+      const comment = form.comment.value
+      // return
+      return {isValid: true, selectedColor, problems, comment}
+    } 
+
+    function handleCancel() {
+      const feedbackContainer = document.querySelector("#feedbackContainer")
+      feedbackContainer.style.visibility = "hidden"
     }
 
     createBikes()
