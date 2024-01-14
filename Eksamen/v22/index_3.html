@@ -6,14 +6,30 @@
   <title>Eksamen v22</title>
   <style>
 
+    body {
+      padding: 0px;
+      margin: 0px;
+    }
+
     #mainContainer {
+      padding: 0px;
       position: relative;
+    }
+
+    #map {
+      width: 100%;
+      height: 94.7vh;
+    }
+
+    #widgetContainer {
+      height: 4vh;
+      border: 2px solid rgba(100, 100, 100, 0.7);
     }
 
     #feedbackContainer {
       position: absolute;
       z-index: 2;
-      top: 0;
+      top: 5vh;
       left: 0;
       max-width: 350px;
       background-color: rgba(255, 255, 255, 0.9);
@@ -27,7 +43,7 @@
     #feedbackSummaryContainer {
       position: absolute;
       z-index: 2;
-      top: 0;
+      top: 5vh;
       left: 360px;
       max-width: 350px;
       background-color: rgba(255, 255, 255, 0.9);
@@ -36,11 +52,6 @@
       border-radius: 3px;
       padding: 0px 15px 15px 15px;
       visibility: hidden;
-    }
-
-    .map {
-      width: 100%;
-      height: auto;
     }
 
     .bikeContainer {
@@ -53,9 +64,11 @@
       height: 10px;
       background-color: rgba(9, 177, 9, 0.8);
     }
+    
     hr {
       opacity: 0.2;
     }
+
     .summaryLabel {
       font-weight: bold;
     }
@@ -64,7 +77,10 @@
 
 <body>  
   <div id="mainContainer">
-    <img src="kartutsnitt.png" alt="Kartutsnitt" class="map">
+    <div id="widgetContainer">
+      sup
+    </div>
+    <img src="kartutsnitt.png" alt="Kartutsnitt" id="map">
     <div id="feedbackContainer">
       <form name="feedbackForm" onsubmit="validateForm()" method="post">
         <h2>Farge</h2>
@@ -109,16 +125,30 @@
       "vehicles": "Kjøretøy",
       "traffic": "Trafikk"
     }
+    let numberOfBikes = 10
     const bikes = []
 
+    function random(min, max) {
+      return min + Math.floor(Math.random() * (max - min + 1))
+    }
+
     function createBikes() {
-      bikes.push({x: 15, y: 20, charge: 20})
-      bikes.push({x: 80, y: 17, charge: 45})
-      bikes.push({x: 60, y: 70, charge: 75})
+      for (let i = 0; i < numberOfBikes; i++) {
+        const bike = {
+          x: random(0, 90),
+          y: random(0, 90),
+          charge: random(20, 100)
+        }
+        bikes.push(bike)
+      }
     }
 
     function placeBikesOnMap() {
+      // get rid of any existing bikes on map
+      document.querySelectorAll('.bikeContainer').forEach(e => e.remove())
       const mainContainer = document.querySelector("#mainContainer")
+
+      // Create html for each bike
       for (let bikeIndex = 0; bikeIndex < bikes.length; bikeIndex++) {
         const bike = bikes[bikeIndex]
         const bikeContainer = document.createElement("div")
@@ -132,6 +162,13 @@
         mainContainer.appendChild(bikeContainer)
       }
     }
+
+    // function handleUpdateBikeCount(event) {
+    //   numberOfBikes = event.target.value
+    //   bikes = []
+    //   createBikes()
+    //   placeBikesOnMap()
+    // }
 
     function handleMouseoverBike(bikeIndex) {
       const bike = bikes[bikeIndex]
