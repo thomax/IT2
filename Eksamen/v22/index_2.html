@@ -15,6 +15,21 @@
       z-index: 2;
       top: 0;
       left: 0;
+      max-width: 350px;
+      background-color: rgba(255, 255, 255, 0.9);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      border: 2px solid rgba(100, 100, 100, 0.7);
+      border-radius: 3px;
+      padding: 0px 15px 15px 15px;
+      visibility: hidden;
+    }
+
+    #feedbackSummaryContainer {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 360px;
+      max-width: 350px;
       background-color: rgba(255, 255, 255, 0.9);
       font-family: Verdana, Geneva, Tahoma, sans-serif;
       border: 2px solid rgba(100, 100, 100, 0.7);
@@ -41,6 +56,9 @@
     hr {
       opacity: 0.2;
     }
+    .summaryLabel {
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -48,7 +66,6 @@
   <div id="mainContainer">
     <img src="kartutsnitt.png" alt="Kartutsnitt" class="map">
     <div id="feedbackContainer">
-
       <form name="feedbackForm" onsubmit="validateForm()" method="post">
         <h2>Farge</h2>
         <div>
@@ -71,12 +88,27 @@
         <h2>Kommentar</h2>
         <textarea id="comment" name="comment" rows="4" cols="40"></textarea>
         <hr/>
-      </form> 
-      <button onclick="validateForm()">Send inn</button>
+      </form>
+      <button onclick="submitForm()">Send inn</button>
       <button onclick="handleCancel()">Avbryt</button>
+    </div>
+
+    <div id="feedbackSummaryContainer">
+      <div id="feedbackSummary"></div>
+      <hr/>
+      <button onclick="toggleSummary(false)">Ok</button>
+    </div>
   </div>
   
   <script>
+    const dictionary = {
+      "yellow": "Gul",
+      "red": "Rød",
+      "blue": "Blå",
+      "pedestrians": "Fotgjengere",
+      "vehicles": "Kjøretøy",
+      "traffic": "Trafikk"
+    }
     const bikes = []
 
     function createBikes() {
@@ -120,19 +152,63 @@
       feedbackContainer.style.visibility = "visible"
     }
 
+    function toggleSummary(enableSummary) {
+      const {selectedColor, problems, comment} = validateForm()
+      const feedbackSummaryContainer = document.querySelector("#feedbackSummaryContainer")
+      feedbackSummaryContainer.style.visibility = enableSummary ? "visible" : "hidden"
+      const feedbackSummary = document.querySelector("#feedbackSummary")
+
+      if (enableSummary) {
+        feedbackSummary.innerHTML = `
+          <h2>Oppsummering</h2>
+          <span class="summaryLabel">Farge: </span><span>${selectedColor}</span><br>
+          <span class="summaryLabel">Til hinder for: </span><span>${problems.join(", ")}</span><br>
+          <span class="summaryLabel">Kommentar: </span><span>${comment}</span>
+          `
+      } else {
+        feedbackSummary.innerHTML = ""
+      }
+    }
+
+    function submitForm() {
+      const {isValid} = validateForm()
+      if (!isValid) {
+        alert("Du må velge en farge")
+        return
+      } else {
+        toggleSummary(true)
+      }
+    }
+
     function validateForm() {
       const form = document.feedbackForm
       // handle colors
       const colors = form.colors
-      let checkedColor
+      let selectedColor
       for (let i = 0; i < colors.length; i++) {
         if (colors[i].checked) {
-          checkedColor = colors[i].value
+          selectedColor = dictionary[colors[i].value]
         }
       }
-      console.log("checkedColor", checkedColor)
+      if (!selectedColor) {
+        return {isValid: false}
+      }
       // handle parking
-      const parkingProblems = [form.pedestrians.checked]
+      const potentialProblems = ["pedestrians", "vehicles", "traffic"]
+      let problems = []
+      if (form.pedestrians.checked) {
+        problems.push(dictionary.pedestrians)
+      }
+      if (form.vehicles.checked) {
+        problems.push(dictionary.vehicles)
+      }
+      if (form.traffic.checked) {
+        problems.push(dictionary.traffic)
+      }
+      // handle comment
+      const comment = form.comment.value
+      // return
+      return {isValid: true, selectedColor, problems, comment}
     } 
 
     function handleCancel() {
