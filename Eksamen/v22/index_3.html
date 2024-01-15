@@ -218,33 +218,25 @@
       document.querySelector("#map").addEventListener('click', handleUserSelectPoint)
     }
 
-    function handleUserSelectPoint(event) {
-      if (isMapPinVisible) {
-        removeMapPin()
-      } else {
-        const pinLocation = addMapPin(event)
-        updateBikeDistances(pinLocation)
-      }
-      updateMap()
-    }
-
     function random(min, max) {
       return min + Math.floor(Math.random() * (max - min + 1))
     }
 
-  function generateId() {
-    let uuid = ''
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    for (let i = 0; i < 5; i++) {
-      uuid += chars.charAt(Math.floor(Math.random() * chars.length))
+    function generateId() {
+      let uuid = ''
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+      for (let i = 0; i < 5; i++) {
+        uuid += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+      return uuid
     }
-    return uuid
-}
 
+    // Convert pixel screen placement to percent placement on map
     function pixelsToPercent(pixels, absoluteSize) {
       return (pixels / absoluteSize) * 100
     }
 
+    // Create bikes (normally loaded from a server)
     function createBikes() {
       bikes = []
       for (let i = 0; i < numberOfBikes; i++) {
@@ -259,6 +251,7 @@
       }
     }
 
+    // Recalculate distances from map pin to bikes
     function updateBikeDistances(mapPinLocation) {
       bikes.forEach((bike) => {
         const distance = Math.sqrt(Math.pow(mapPinLocation.x - bike.x, 2) + Math.pow(mapPinLocation.y - bike.y, 2))
@@ -292,15 +285,12 @@
       maybeShowClosestBikesReport(bikesToDisplay)
     }
 
-    function handleUpdateNumberOfBikes(event) {
-      numberOfBikes = event.target.value
-    }
-
     function addMapPin(event) {
       // Add pin to map
       const map = document.querySelector("#map")
       const mapPin = document.querySelector("#mapPin")
       const widgetContainer = document.querySelector("#widgetContainer")
+      // Figure out x and y, as percentages of map size
       const pinLocation = {
         x: pixelsToPercent(event.clientX - (mapPin.offsetWidth/2), map.offsetWidth),
         y: pixelsToPercent(event.clientY - widgetContainer.offsetHeight - mapPin.offsetHeight, map.offsetHeight)
@@ -316,6 +306,16 @@
       const mapPin = document.querySelector("#mapPin")
       mapPin.style.visibility = "hidden"
       isMapPinVisible = false
+    }
+
+    function handleUserSelectPoint(event) {
+      if (isMapPinVisible) {
+        removeMapPin()
+      } else {
+        const pinLocation = addMapPin(event)
+        updateBikeDistances(pinLocation)
+      }
+      updateMap()
     }
 
     function handleMouseoverBike(bikeIndex) {
@@ -365,11 +365,10 @@
 
     function submitForm() {
       const {isValid} = validateForm()
-      if (!isValid) {
-        alert("Du må velge en farge")
-        return
-      } else {
+      if (isValid) {
         toggleSummary(true)
+      } else {
+        alert("Du må velge en farge")
       }
     }
 
@@ -406,9 +405,11 @@
 
     function maybeShowClosestBikesReport(bikesToDisplay) {
       const closestBikesReport = document.querySelector("#closestBikesReport")
+      // toggle visibility of report
       closestBikesReport.style.visibility = isMapPinVisible ? "visible" : "hidden"
-      let htmlReport = ''
+      // create report and show report
       if (isMapPinVisible) {
+        let htmlReport = ''
         bikesToDisplay.forEach((bike) => {
           htmlReport += `<li>Sykkel: ${bike.id}. Avstand: ${Math.ceil(bike.distance)}. Batteri: ${bike.charge}%</li>`
         })          
