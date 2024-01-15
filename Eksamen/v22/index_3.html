@@ -13,7 +13,11 @@
 
     #mainContainer {
       padding: 0px;
+    }
+    
+    #mapContainer {
       position: relative;
+
     }
 
     #map {
@@ -54,6 +58,19 @@
       visibility: hidden;
     }
 
+    #numberOfBikesWidget {
+    }
+
+    #chargeLevelWidget {
+    }
+
+    .widget {
+      border: 1px solid rgba(100, 100, 100, 0.7);
+      margin: 5px 5px 5px 5px;
+      padding: 8px;
+      height: 100%;
+    }
+
     .bikeContainer {
       position: absolute;
     }
@@ -78,9 +95,18 @@
 <body>  
   <div id="mainContainer">
     <div id="widgetContainer">
-      sup
+      <span id="numberOfBikesWidget" class="widget">
+        <label for="numberOfBikes">Antall sykler: </label>
+        <input type="range" min="4" max="24" value="10" class="slider" id="numberOfBikesSlider">
+      </span>
+      <span id="chargeLevelWidget" class="widget">
+        <label for="chargeLevel">Minimum batteri: </label>
+        <input type="range" min="1" max="100" value="50" class="slider" id="chargeLevelSlider">
+      </span>
     </div>
-    <img src="kartutsnitt.png" alt="Kartutsnitt" id="map">
+    <div id="mapContainer">
+      <img src="kartutsnitt.png" alt="Kartutsnitt" id="map">
+    </div>
     <div id="feedbackContainer">
       <form name="feedbackForm" onsubmit="validateForm()" method="post">
         <h2>Farge</h2>
@@ -116,7 +142,7 @@
     </div>
   </div>
   
-  <script>
+  <script defer>
     const dictionary = {
       "yellow": "Gul",
       "red": "Rød",
@@ -126,13 +152,26 @@
       "traffic": "Trafikk"
     }
     let numberOfBikes = 10
-    const bikes = []
+    let minimumChargeLevel = 50
+    let bikes = []
+
+    document.querySelector("#numberOfBikesSlider").oninput = function() {
+      numberOfBikes = this.value
+      createBikes()
+      updateMap()
+    }
+
+    document.querySelector("#chargeLevelSlider").oninput = function() {
+      minimumChargeLevel = this.value
+      updateMap()
+    } 
 
     function random(min, max) {
       return min + Math.floor(Math.random() * (max - min + 1))
     }
 
     function createBikes() {
+      bikes = []
       for (let i = 0; i < numberOfBikes; i++) {
         const bike = {
           x: random(0, 90),
@@ -143,32 +182,31 @@
       }
     }
 
-    function placeBikesOnMap() {
-      // get rid of any existing bikes on map
+    function updateMap() {
+      // Get rid of all bikes on map
       document.querySelectorAll('.bikeContainer').forEach(e => e.remove())
-      const mainContainer = document.querySelector("#mainContainer")
+      const mapContainer = document.querySelector("#mapContainer")
+
+      // Filter bikes based on minimum charge level
+      let bikesToDisplay = bikes.filter((bike) => (bike.charge >= minimumChargeLevel))
 
       // Create html for each bike
-      for (let bikeIndex = 0; bikeIndex < bikes.length; bikeIndex++) {
-        const bike = bikes[bikeIndex]
+      bikesToDisplay.forEach((bike, bikeIndex) => {
         const bikeContainer = document.createElement("div")
         bikeContainer.classList.add("bikeContainer")
         bikeContainer.setAttribute("onmouseover", `handleMouseoverBike(${bikeIndex})`)
         bikeContainer.setAttribute("onmouseout", `handleMouseoutBike(${bikeIndex})`)
         bikeContainer.setAttribute("onclick", `handleClickBike(${bikeIndex})`)
-        bikeContainer.innerHTML = `<div class="bike"><img src="ikon.png" alt="Bike"></div><div class="bar" id="bar${bikeIndex}"></div>`
+        bikeContainer.innerHTML = `<div class="bike"><img src="ikon.png" alt="Bike"></div><div class="bar" id="bar${bikeIndex}">${bike.charge}%</div>`
         bikeContainer.style.left = bike.x + "%"
         bikeContainer.style.top = bike.y + "%"
-        mainContainer.appendChild(bikeContainer)
-      }
+        mapContainer.appendChild(bikeContainer)
+      })
     }
 
-    // function handleUpdateBikeCount(event) {
-    //   numberOfBikes = event.target.value
-    //   bikes = []
-    //   createBikes()
-    //   placeBikesOnMap()
-    // }
+    function handleUpdateNumberOfBikes(event) {
+      numberOfBikes = event.target.value
+    }
 
     function handleMouseoverBike(bikeIndex) {
       const bike = bikes[bikeIndex]
@@ -254,7 +292,7 @@
     }
 
     createBikes()
-    placeBikesOnMap()
+    updateMap()
   </script>
 
 </body>
