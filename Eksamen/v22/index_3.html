@@ -53,6 +53,20 @@
       visibility: hidden;
     }
 
+    #closestBikesReport {
+      position: absolute;
+      z-index: 2;
+      top: 5vh;
+      left: 720px;
+      max-width: 350px;
+      background-color: rgba(255, 255, 255, 0.9);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      border: 2px solid rgba(100, 100, 100, 0.7);
+      border-radius: 3px;
+      padding: 0px 15px 15px 15px;
+      visibility: hidden;
+    }
+
     #widgetContainer {
       height: 5vh;
       background-color: silver;
@@ -160,6 +174,11 @@
       <hr/>
       <button onclick="toggleSummary(false)">Ok</button>
     </div>
+
+    <div id="closestBikesReport">
+      <button onclick="toggleReport(false)">Ok</button>
+    </div>
+    
   </div>
   
   <script defer>
@@ -201,27 +220,26 @@
 
     function handleUserSelectPoint(event) {
       if (isMapPinVisible) {
-        handleRemoveMapPin()
-        return
+        removeMapPin()
+      } else {
+        const pinLocation = addMapPin(event)
+        updateBikeDistances(pinLocation)
       }
-      // Add pin to map
-      const map = document.querySelector("#map")
-      const mapPin = document.querySelector("#mapPin")
-      const widgetContainer = document.querySelector("#widgetContainer")
-      const pinLocation = {
-        x: pixelsToPercent(event.clientX - (mapPin.offsetWidth/2), map.offsetWidth),
-        y: pixelsToPercent(event.clientY - widgetContainer.offsetHeight - mapPin.offsetHeight, map.offsetHeight)
-      }
-      mapPin.style.left = pinLocation.x + '%'
-      mapPin.style.top = pinLocation.y + '%'
-      mapPin.style.visibility = "visible"
-      isMapPinVisible = true
-      updateBikeDistances(pinLocation)
+      updateMap()
     }
 
     function random(min, max) {
       return min + Math.floor(Math.random() * (max - min + 1))
     }
+
+  function generateId() {
+    let uuid = ''
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    for (let i = 0; i < 5; i++) {
+      uuid += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return uuid
+}
 
     function pixelsToPercent(pixels, absoluteSize) {
       return (pixels / absoluteSize) * 100
@@ -231,6 +249,7 @@
       bikes = []
       for (let i = 0; i < numberOfBikes; i++) {
         const bike = {
+          id: generateId(),
           x: random(0, 90),
           y: random(0, 90),
           charge: random(20, 100),
@@ -246,7 +265,6 @@
         bike.distance = distance
       })
       bikes.sort((a, b) => a.distance - b.distance)
-      updateMap()
     }
 
     function updateMap() {
@@ -271,21 +289,38 @@
         bikeContainer.style.top = bike.y + "%"
         document.querySelector("#mapContainer").appendChild(bikeContainer)
       })
+      maybeShowClosestBikesReport(bikesToDisplay)
     }
 
     function handleUpdateNumberOfBikes(event) {
       numberOfBikes = event.target.value
     }
 
-    function handleRemoveMapPin() {
+    function addMapPin(event) {
+      // Add pin to map
+      const map = document.querySelector("#map")
+      const mapPin = document.querySelector("#mapPin")
+      const widgetContainer = document.querySelector("#widgetContainer")
+      const pinLocation = {
+        x: pixelsToPercent(event.clientX - (mapPin.offsetWidth/2), map.offsetWidth),
+        y: pixelsToPercent(event.clientY - widgetContainer.offsetHeight - mapPin.offsetHeight, map.offsetHeight)
+      }
+      mapPin.style.left = pinLocation.x + '%'
+      mapPin.style.top = pinLocation.y + '%'
+      mapPin.style.visibility = "visible"
+      isMapPinVisible = true
+      return pinLocation
+    }
+
+    function removeMapPin() {
       const mapPin = document.querySelector("#mapPin")
       mapPin.style.visibility = "hidden"
       isMapPinVisible = false
-      updateMap()
     }
 
     function handleMouseoverBike(bikeIndex) {
       const bike = bikes[bikeIndex]
+      console.log(JSON.stringify(bike, null, 2))
       const bar = document.querySelector(`#bar${bikeIndex}`)
       bar.style.transition = "width 2s"
       bar.style.width = `${bike.charge}%`
@@ -301,6 +336,12 @@
       const bike = bikes[bikeIndex]
       const feedbackContainer = document.querySelector("#feedbackContainer")
       feedbackContainer.style.visibility = "visible"
+    }
+
+    // Remove the feedback form
+    function handleCancel() {
+      const feedbackContainer = document.querySelector("#feedbackContainer")
+      feedbackContainer.style.visibility = "hidden"
     }
 
     // Create a summary of input about to be submitted
@@ -359,13 +400,20 @@
       }
       // handle comment
       const comment = form.comment.value
-      // return
-      return {isValid: true, selectedColor, problems, comment}
-    } 
 
-    function handleCancel() {
-      const feedbackContainer = document.querySelector("#feedbackContainer")
-      feedbackContainer.style.visibility = "hidden"
+      return {isValid: true, selectedColor, problems, comment}
+    }
+
+    function maybeShowClosestBikesReport(bikesToDisplay) {
+      const closestBikesReport = document.querySelector("#closestBikesReport")
+      closestBikesReport.style.visibility = isMapPinVisible ? "visible" : "hidden"
+      let htmlReport = ''
+      if (isMapPinVisible) {
+        bikesToDisplay.forEach((bike) => {
+          htmlReport += `<li>Sykkel: ${bike.id}. Avstand: ${Math.ceil(bike.distance)}. Batteri: ${bike.charge}%</li>`
+        })          
+        closestBikesReport.innerHTML = `<h2>Nærmeste sykler</h2><ol>${htmlReport}</ol>`
+      }
     }
 
     initializeApp()
