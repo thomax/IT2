@@ -17,17 +17,12 @@
     
     #mapContainer {
       position: relative;
-
     }
 
     #map {
       width: 100%;
-      height: 94.7vh;
-    }
-
-    #widgetContainer {
-      height: 4vh;
-      border: 2px solid rgba(100, 100, 100, 0.7);
+      height: 93.7vh;
+      object-fit: contain;
     }
 
     #feedbackContainer {
@@ -58,14 +53,21 @@
       visibility: hidden;
     }
 
-    #numberOfBikesWidget {
+    #widgetContainer {
+      height: 5vh;
+      border: 2px solid rgba(100, 100, 100, 0.7);
     }
 
-    #chargeLevelWidget {
+    #mapPin {
+      position: absolute;
+      visibility: hidden;
+      top: 50%;
+      left: 50%;
+      width: 20px;
     }
 
     .widget {
-      border: 1px solid rgba(100, 100, 100, 0.7);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
       margin: 5px 5px 5px 5px;
       padding: 8px;
       height: 100%;
@@ -95,18 +97,23 @@
 <body>  
   <div id="mainContainer">
     <div id="widgetContainer">
-      <span id="numberOfBikesWidget" class="widget">
+      <span class="widget">
         <label for="numberOfBikes">Antall sykler: </label>
+        <output id="numberOfBikesOutput">10</output>
         <input type="range" min="4" max="24" value="10" class="slider" id="numberOfBikesSlider">
       </span>
-      <span id="chargeLevelWidget" class="widget">
+      <span class="widget">
         <label for="chargeLevel">Minimum batteri: </label>
+        <output id="chargeLevelOutput">50%</output>
         <input type="range" min="1" max="100" value="50" class="slider" id="chargeLevelSlider">
       </span>
     </div>
+
     <div id="mapContainer">
       <img src="kartutsnitt.png" alt="Kartutsnitt" id="map">
+      <img src="pin1.png" alt="Map pin" id="mapPin">
     </div>
+    
     <div id="feedbackContainer">
       <form name="feedbackForm" onsubmit="validateForm()" method="post">
         <h2>Farge</h2>
@@ -143,6 +150,7 @@
   </div>
   
   <script defer>
+
     const dictionary = {
       "yellow": "Gul",
       "red": "Rød",
@@ -154,20 +162,44 @@
     let numberOfBikes = 10
     let minimumChargeLevel = 50
     let bikes = []
+    let mapPinLocation = {x: 0, y: 0}
 
     document.querySelector("#numberOfBikesSlider").oninput = function() {
       numberOfBikes = this.value
+      document.querySelector("#numberOfBikesOutput").value = numberOfBikes
       createBikes()
       updateMap()
     }
 
     document.querySelector("#chargeLevelSlider").oninput = function() {
       minimumChargeLevel = this.value
+      document.querySelector("#chargeLevelOutput").value = minimumChargeLevel + "%"
       updateMap()
     } 
 
+    document.addEventListener('click', handleUserSelectPoint)
+
+    function handleUserSelectPoint(event) {
+      // Add pin to map
+      const map = document.querySelector("#map")
+      const mapPin = document.querySelector("#mapPin")
+      const widgetContainer = document.querySelector("#widgetContainer")
+      location = {
+        x: pixelsToPercent(event.clientX - (mapPin.offsetWidth/2), map.offsetWidth),
+        y: pixelsToPercent(event.clientY - widgetContainer.offsetHeight - mapPin.offsetHeight, map.offsetHeight)
+      }
+      mapPin.style.left = location.x + '%'
+      mapPin.style.top = location.y + '%'
+      mapPin.style.visibility = "visible"
+      updateBikeDistances(location)
+    }
+
     function random(min, max) {
       return min + Math.floor(Math.random() * (max - min + 1))
+    }
+
+    function pixelsToPercent(pixels, absoluteSize) {
+      return (pixels / absoluteSize) * 100
     }
 
     function createBikes() {
@@ -176,16 +208,25 @@
         const bike = {
           x: random(0, 90),
           y: random(0, 90),
-          charge: random(20, 100)
+          charge: random(20, 100),
+          distance: 10000,
         }
         bikes.push(bike)
       }
     }
 
+    function updateBikeDistances(mapPinLocation) {
+      bikes.forEach((bike) => {
+        const distance = Math.sqrt(Math.pow(mapPinLocation.x - bike.x, 2) + Math.pow(mapPinLocation.y - bike.y, 2))
+        bike.distance = distance
+      })
+      bikes.sort((a, b) => a.distance - b.distance)
+      updateMap()
+    }
+
     function updateMap() {
       // Get rid of all bikes on map
       document.querySelectorAll('.bikeContainer').forEach(e => e.remove())
-      const mapContainer = document.querySelector("#mapContainer")
 
       // Filter bikes based on minimum charge level
       let bikesToDisplay = bikes.filter((bike) => (bike.charge >= minimumChargeLevel))
@@ -200,7 +241,7 @@
         bikeContainer.innerHTML = `<div class="bike"><img src="ikon.png" alt="Bike"></div><div class="bar" id="bar${bikeIndex}">${bike.charge}%</div>`
         bikeContainer.style.left = bike.x + "%"
         bikeContainer.style.top = bike.y + "%"
-        mapContainer.appendChild(bikeContainer)
+        document.querySelector("#mapContainer").appendChild(bikeContainer)
       })
     }
 
