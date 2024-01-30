@@ -1,0 +1,54 @@
+#gameArea {
+  position: relative;
+  width: 600px;
+  height: 400px;
+  border: 1px solid black;
+}
+
+#freezoneLeft {
+  position: absolute;
+  background-color: yellow;
+  left: 0px;
+  top: 0px;
+  width: 50px;
+  height: 400px;
+}
+
+#freezoneRight {
+  position: absolute;
+  background-color: yellow;
+  left: 550px;
+  top: 0px;
+  width: 50px;
+  height: 400px;
+}
+
+#player,
+#sheep,
+.ghost,
+.obstacle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+}
+
+#player {
+  background-color: blue;
+  z-index: 4;
+}
+#sheep {
+  background-color: green;
+  left: 300px;
+  top: 200px;
+  z-index: 2;
+}
+.ghost {
+  background-color: red;
+  left: 100px;
+  z-index: 3;
+}
+.obstacle {
+  background-color: grey;
+  left: 200px;
+  top: 100px;
+}
