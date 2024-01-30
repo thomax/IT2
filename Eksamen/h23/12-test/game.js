@@ -108,22 +108,37 @@ class Sheep extends GameObject {
 // set up game
 function initGame() {
   game = new Game(gameWidth, gameHeight)
-  player = new Player(20, gameHeight / 2, 10, playerElement)
-  const sheepLoc = randomLocation('sheep')
-  sheep = new Sheep(sheepLoc.x, sheepLoc.y, sheepElement)
-  obstacles = Array.from(obstacleElements).map(element => {
-    const loc = randomLocation('obstacle')
-    return new Obstacle(loc.x, loc.y, element)
-  })
-  ghosts = Array.from(ghostElements).map(element => {
-    const loc = randomLocation('ghost')
-    return new Ghost(loc.x, loc.y, element)
-  })
+  spawnGameObject('player')
+  spawnGameObject('sheep')
+  spawnGameObject('ghost')
+  Array(3).fill(null).map(_ => spawnGameObject('obstacle'))
   window.requestAnimationFrame(gameLoop)
 }
 
-function spawnObstacle() {
-
+function spawnGameObject(objectType) {
+  const element = document.createElement('div')
+  if (objectType === 'player' || objectType === 'sheep') {
+    element.id = objectType
+  } else {
+    element.classList.add(objectType)
+  }
+  gameArea.appendChild(element)
+  const loc = randomLocation(objectType)
+  let obj
+  if (objectType === 'obstacle') {
+    obj = new Obstacle(loc.x, loc.y, element)
+    obstacles.push(obj)
+  } else if (objectType === 'ghost') {
+    obj = new Ghost(loc.x, loc.y, element)
+    ghosts.push(obj)
+  } else if (objectType === 'player') {
+    obj = new Player(loc.x, loc.y, defaultPlayerSpeed, element)
+    player = obj
+  } else if (objectType === 'sheep') {
+    obj = new Sheep(loc.x, loc.y, element)
+    sheep = obj
+  }
+  game.addObject(obj)
 }
 
 function handleKeyDown(event) {
@@ -144,6 +159,8 @@ function randomLocation(objectType) {
       x: randomBetween(gameWidth - freeZoneWidth, gameWidth - spriteSize),
       y: Math.random() * gameHeight - spriteSize
     }
+  } else if (objectType === 'player') {
+    return { x: 20, y: gameHeight / 2 } // player always starts at same location
   }
   return {
     x: randomBetween(freeZoneWidth, gameWidth - freeZoneWidth - spriteSize),
@@ -192,20 +209,20 @@ function gameLoop() {
 }
 
 // DOM elements
-const playerElement = document.getElementById('player')
-const sheepElement = document.getElementById('sheep')
-const obstacleElements = document.getElementsByClassName('obstacle')
-const ghostElements = document.getElementsByClassName('ghost')
+const gameArea = document.getElementById('gameArea')
 
 // Event listeners
-document.addEventListener('keydown', handleKeyDown)
 document.addEventListener('DOMContentLoaded', initGame)
+document.addEventListener('keydown', handleKeyDown)
 
 // Global variables
-let game, player, sheep, obstacles, ghosts
+let game, player, sheep
+const obstacles = []
+const ghosts = []
 const gameWidth = 600
 const gameHeight = 400
 const freeZoneWidth = 50
+const defaultPlayerSpeed = 10
 const ghostSpeed = 2
 const spriteSize = 20
 
