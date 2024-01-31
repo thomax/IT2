@@ -80,6 +80,15 @@ class Ghost extends GameObject {
   changeDirection(newDirection) {
     this.direction = newDirection
   }
+
+  currentVector() {
+    // calculate vector based on 0-360 direction
+    const angleRadians = this.direction * (Math.PI / 180)
+    return {
+      x: Math.cos(angleRadians) * ghostSpeed,
+      y: Math.sin(angleRadians) * ghostSpeed
+    }
+  }
 }
 
 class Obstacle extends GameObject {
@@ -141,30 +150,28 @@ function spawnGameObject(objectType) {
   game.addObject(obj)
 }
 
-function handleKeyDown(event) {
-  if (event.key === 'w') {
-    player.moveInDirection(player.speed, 'up')
-  } else if (event.key === 's') {
-    player.moveInDirection(player.speed, 'down')
-  } else if (event.key === 'a') {
-    player.moveInDirection(player.speed, 'left')
-  } else if (event.key === 'd') {
-    player.moveInDirection(player.speed, 'right')
-  }
+function onKeyDown(event) {
+  pressedKeys[event.key] = true
 }
+
+function onKeyUp(event) {
+  pressedKeys[event.key] = false
+}
+
 
 function randomLocation(objectType) {
   if (objectType === 'sheep') {
     return {
       x: randomBetween(gameWidth - freeZoneWidth, gameWidth - spriteSize),
-      y: Math.random() * gameHeight - spriteSize
+      y: randomBetween(0, gameHeight - spriteSize)
     }
   } else if (objectType === 'player') {
     return { x: 20, y: gameHeight / 2 } // player always starts at same location
   }
+  // ghost or obstacle
   return {
     x: randomBetween(freeZoneWidth, gameWidth - freeZoneWidth - spriteSize),
-    y: Math.random() * gameHeight - spriteSize
+    y: randomBetween(0, gameHeight - spriteSize)
   }
 }
 
@@ -174,15 +181,26 @@ function randomBetween(min, max) {
 
 function moveGhosts() {
   ghosts.forEach(ghost => {
-    // calculate vector based on 0-360 angle
-    const angleRadians = ghost.direction * (Math.PI / 180)
-    const vector = {
-      x: Math.cos(angleRadians) * ghostSpeed,
-      y: Math.sin(angleRadians) * ghostSpeed
-    }
+    const vector = ghost.currentVector()
     ghost.move(vector.x, vector.y)
   })
 }
+
+function movePlayer() {
+  if (pressedKeys['w']) {
+    player.moveInDirection(player.speed, 'up')
+  }
+  if (pressedKeys['s']) {
+    player.moveInDirection(player.speed, 'down')
+  }
+  if (pressedKeys['a']) {
+    player.moveInDirection(player.speed, 'left')
+  }
+  if (pressedKeys['d']) {
+    player.moveInDirection(player.speed, 'right')
+  }
+}
+
 
 function checkCollisions() {
   // check if ghosts are within bounds
@@ -203,6 +221,7 @@ function checkCollisions() {
 }
 
 function gameLoop() {
+  movePlayer()
   moveGhosts()
   checkCollisions()
   window.requestAnimationFrame(gameLoop)
@@ -213,7 +232,8 @@ const gameArea = document.getElementById('gameArea')
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', initGame)
-document.addEventListener('keydown', handleKeyDown)
+document.addEventListener('keydown', onKeyDown)
+document.addEventListener('keyup', onKeyUp)
 
 // Global variables
 let game, player, sheep
@@ -222,7 +242,8 @@ const ghosts = []
 const gameWidth = 600
 const gameHeight = 400
 const freeZoneWidth = 50
-const defaultPlayerSpeed = 10
+const defaultPlayerSpeed = 5
 const ghostSpeed = 2
 const spriteSize = 20
+const pressedKeys = {}
 
