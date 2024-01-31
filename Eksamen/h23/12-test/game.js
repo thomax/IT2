@@ -20,6 +20,8 @@ class GameObject {
   constructor(x, y, element) {
     this.x = x
     this.y = y
+    this.previousX = 0
+    this.previousY = 0
     this.element = element
     this.positionAt(x, y)
   }
@@ -32,9 +34,25 @@ class GameObject {
   }
 
   move(dx, dy) {
+    this.previousX = this.x
+    this.previousY = this.y
     this.x += dx
     this.y += dy
     this.positionAt(this.x, this.y)
+  }
+
+  // this is useful for rolling back movement when a collision is detected
+  rollBackMovement() {
+    this.positionAt(this.previousX, this.previousY)
+  }
+
+  rect() {
+    return {
+      x: this.x,
+      y: this.y,
+      width: spriteSize,
+      height: spriteSize,
+    }
   }
 }
 
@@ -119,11 +137,18 @@ function initGame() {
   game = new Game(gameWidth, gameHeight)
   spawnGameObject('player')
   spawnGameObject('sheep')
-  spawnGameObject('ghost')
-  Array(3).fill(null).map(_ => spawnGameObject('obstacle'))
+  for (let i = 0; i < initialGhostCount; i++) {
+    spawnGameObject('ghost')
+  }
+  for (let i = 0; i < initialObstacleCount; i++) {
+    spawnGameObject('obstacle')
+  }
+
+  // Begin game loop
   window.requestAnimationFrame(gameLoop)
 }
 
+// Spawn game objects. Maybe this should be broken up into separate functions for each object type
 function spawnGameObject(objectType) {
   const element = document.createElement('div')
   if (objectType === 'player' || objectType === 'sheep') {
@@ -158,7 +183,7 @@ function onKeyUp(event) {
   pressedKeys[event.key] = false
 }
 
-
+// Where do game objects spawn
 function randomLocation(objectType) {
   if (objectType === 'sheep') {
     return {
@@ -166,7 +191,7 @@ function randomLocation(objectType) {
       y: randomBetween(0, gameHeight - spriteSize)
     }
   } else if (objectType === 'player') {
-    return { x: 20, y: gameHeight / 2 } // player always starts at same location
+    return { x: 20, y: gameHeight / 2 } // player always spawn at same location
   }
   // ghost or obstacle
   return {
@@ -186,6 +211,7 @@ function moveGhosts() {
   })
 }
 
+// Move player, allowing diagonal movement. Not sure if this is a good idea
 function movePlayer() {
   if (pressedKeys['w']) {
     player.moveInDirection(player.speed, 'up')
@@ -203,28 +229,91 @@ function movePlayer() {
 
 
 function checkCollisions() {
-  // check if ghosts are within bounds
+  // check ghost collisions
   ghosts.forEach((ghost) => {
+    // check if ghost has collided with player
+    if (isColliding(player.rect(), ghost.rect())) {
+      gameOver = true
+      return
+    }
+
     if (ghost.x < freeZoneWidth || ghost.x > gameWidth - freeZoneWidth - spriteSize) {
       // bounce off a vertical wall
+      ghost.rollBackMovement()
       ghost.changeDirection(180 - ghost.direction)
     } else if (ghost.y < 0 || ghost.y > gameHeight - spriteSize) {
       // bounce off a horizontal wall
+      ghost.rollBackMovement()
       ghost.changeDirection(360 - ghost.direction)
     }
   })
-  // check if player is within bounds
-  // check if player has picked up sheep
-  // check if player has dropped off sheep
-  // check if player has collided with ghost
+
   // check if player has collided with obstacle
+  obstacles.forEach((obstacle) => {
+    if (isColliding(player.rect(), obstacle.rect())) {
+      player.rollBackMovement()
+    }
+  })
+
+  // check if player is within game area
+  if (!isInside(player.rect(), gameAreaRect)) {
+    player.rollBackMovement()
+  }
+
+  // check if player should pick up sheep
+  if (!player.isCarryingSheep && isColliding(player.rect(), sheep.rect())) {
+    sheep.isCarried = true
+    sheep.element.style.visibility = 'hidden'
+    player.isCarryingSheep = true
+    player.speed = player.speed / 2
+    player.element.style.border = '2px solid yellow'
+  }
+
+  // check if player should drop off sheep
+  if (player.isCarryingSheep && isInside(player.rect(), dropoffZoneRect)) {
+    player.isCarryingSheep = false
+    player.speed = defaultPlayerSpeed
+    player.element.style.border = 'none'
+    player.changeScore()
+    document.getElementById('score').innerText = 'Score: ' + player.score
+
+    // not removing and respawning sheep, just recycling it at spawn location
+    sheep.isCarried = false
+    sheep.element.style.visibility = 'visible'
+    const sheepPos = randomLocation('sheep')
+    sheep.positionAt(sheepPos.x, sheepPos.y)
+
+    // add more problems for player
+    spawnGameObject('ghost')
+    spawnGameObject('obstacle')
+  }
 }
 
+function isColliding(rect1, rect2) {
+  return rect1.x < rect2.x + rect2.width &&
+    rect1.x + rect1.width > rect2.x &&
+    rect1.y < rect2.y + rect2.height &&
+    rect1.y + rect1.height > rect2.y
+}
+
+function isInside(innerRect, outerRect) {
+  return innerRect.x >= outerRect.x &&
+    innerRect.x + innerRect.width <= outerRect.x + outerRect.width &&
+    innerRect.y >= outerRect.y &&
+    innerRect.y + innerRect.height <= outerRect.y + outerRect.height;
+}
+
+
 function gameLoop() {
-  movePlayer()
-  moveGhosts()
-  checkCollisions()
-  window.requestAnimationFrame(gameLoop)
+  if (gameOver) {
+    document.getElementById('message').style.visibility = 'visible'
+    return
+  } else {
+    movePlayer()
+    moveGhosts()
+    checkCollisions()
+    window.requestAnimationFrame(gameLoop)
+  }
 }
 
 // DOM elements
@@ -241,9 +330,14 @@ const obstacles = []
 const ghosts = []
 const gameWidth = 600
 const gameHeight = 400
+const initialGhostCount = 1
+const initialObstacleCount = 3
 const freeZoneWidth = 50
-const defaultPlayerSpeed = 5
+const defaultPlayerSpeed = 6
 const ghostSpeed = 2
 const spriteSize = 20
 const pressedKeys = {}
+const dropoffZoneRect = { x: 0, y: 0, width: freeZoneWidth, height: gameHeight }
+const gameAreaRect = { x: spriteSize, y: spriteSize, width: gameWidth - spriteSize, height: gameHeight - spriteSize }
+let gameOver = false
 
