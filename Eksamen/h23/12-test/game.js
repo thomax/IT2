@@ -135,6 +135,8 @@ class Sheep extends GameObject {
 // set up game
 function initGame() {
   game = new Game(gameWidth, gameHeight)
+  gameArea.style.width = gameWidth + 'px'
+  gameArea.style.height = gameHeight + 'px'
   spawnGameObject('player')
   spawnGameObject('sheep')
   for (let i = 0; i < initialGhostCount; i++) {
@@ -150,13 +152,19 @@ function initGame() {
 
 // Spawn game objects. Maybe this should be broken up into separate functions for each object type
 function spawnGameObject(objectType) {
+
+  // Create DOM element for object
   const element = document.createElement('div')
   if (objectType === 'player' || objectType === 'sheep') {
     element.id = objectType
   } else {
     element.classList.add(objectType)
   }
+  element.style.width = spriteSize + 'px'
+  element.style.height = spriteSize + 'px'
   gameArea.appendChild(element)
+
+  // Create game object
   const loc = randomLocation(objectType)
   let obj
   if (objectType === 'obstacle') {
@@ -191,7 +199,8 @@ function randomLocation(objectType) {
       y: randomBetween(0, gameHeight - spriteSize)
     }
   } else if (objectType === 'player') {
-    return { x: 20, y: gameHeight / 2 } // player always spawn at same location
+    // player always appears at same location
+    return { x: 20, y: gameHeight / 2 }
   }
   // ghost or obstacle
   return {
@@ -228,7 +237,7 @@ function movePlayer() {
 }
 
 
-function checkCollisions() {
+function checkGhostCollisions() {
   // check ghost collisions
   ghosts.forEach((ghost) => {
     // check if ghost has collided with player
@@ -247,14 +256,18 @@ function checkCollisions() {
       ghost.changeDirection(360 - ghost.direction)
     }
   })
+}
 
-  // check if player has collided with obstacle
+function checkObstacleCollisions() {
+  // check if obstacle and player overlap
   obstacles.forEach((obstacle) => {
     if (isColliding(player.rect(), obstacle.rect())) {
       player.rollBackMovement()
     }
   })
+}
 
+function checkPlayerCollisions() {
   // check if player is within game area
   if (!isInside(player.rect(), gameAreaRect)) {
     player.rollBackMovement()
@@ -272,12 +285,12 @@ function checkCollisions() {
   // check if player should drop off sheep
   if (player.isCarryingSheep && isInside(player.rect(), dropoffZoneRect)) {
     player.isCarryingSheep = false
-    player.speed = defaultPlayerSpeed
+    player.speed = player.speed * 2
     player.element.style.border = 'none'
     player.changeScore()
-    document.getElementById('score').innerText = 'Score: ' + player.score
+    document.getElementById('score').innerText = player.score
 
-    // not removing and respawning sheep, just recycling it at spawn location
+    // not removing and creating new sheep, just recycling it at new spawn location
     sheep.isCarried = false
     sheep.element.style.visibility = 'visible'
     const sheepPos = randomLocation('sheep')
@@ -289,6 +302,7 @@ function checkCollisions() {
   }
 }
 
+// check if two rectangles are overlapping
 function isColliding(rect1, rect2) {
   return rect1.x < rect2.x + rect2.width &&
     rect1.x + rect1.width > rect2.x &&
@@ -296,6 +310,7 @@ function isColliding(rect1, rect2) {
     rect1.y + rect1.height > rect2.y
 }
 
+// check if inner rectangle is inside outer rectangle
 function isInside(innerRect, outerRect) {
   return innerRect.x >= outerRect.x &&
     innerRect.x + innerRect.width <= outerRect.x + outerRect.width &&
@@ -303,7 +318,7 @@ function isInside(innerRect, outerRect) {
     innerRect.y + innerRect.height <= outerRect.y + outerRect.height;
 }
 
-
+// this happens every "tick", up to the display frequency of the monitor
 function gameLoop() {
   if (gameOver) {
     document.getElementById('message').style.visibility = 'visible'
@@ -311,12 +326,14 @@ function gameLoop() {
   } else {
     movePlayer()
     moveGhosts()
-    checkCollisions()
+    checkGhostCollisions()
+    checkObstacleCollisions()
+    checkPlayerCollisions()
     window.requestAnimationFrame(gameLoop)
   }
 }
 
-// DOM elements
+// DOM element for game area
 const gameArea = document.getElementById('gameArea')
 
 // Event listeners
@@ -325,9 +342,11 @@ document.addEventListener('keydown', onKeyDown)
 document.addEventListener('keyup', onKeyUp)
 
 // Global variables
+// Game objects
 let game, player, sheep
 const obstacles = []
 const ghosts = []
+// Constants for tweaking how the game works
 const gameWidth = 600
 const gameHeight = 400
 const initialGhostCount = 1

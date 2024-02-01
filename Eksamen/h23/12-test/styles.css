@@ -30,7 +30,7 @@ body {
 
 #message {
   position: absolute;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 2em;
@@ -45,12 +45,15 @@ body {
 #score {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
+  min-width: 20px;
+  padding: 5px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1em;
   color: white;
   left: 10px;
   top: 10px;
+  z-index: 10;
+  text-align: center;
   z-index: 11;
 }
 
@@ -61,6 +64,9 @@ body {
   position: absolute;
   width: 20px;
   height: 20px;
+  color: white;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 #player {
