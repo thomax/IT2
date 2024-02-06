@@ -16,8 +16,8 @@ class GameObject {
     return {
       x: this.x,
       y: this.y,
-      width: this.element.style.width,
-      height: this.element.style.height
+      width: spriteSize,
+      height: spriteSize
     }
   }
 
@@ -94,6 +94,7 @@ class Sheep extends GameObject {
     super(x, y, element)
     this.isCarried = false
   }
+
   // blirLøftet() utgår foreløpig
 
   removeSheep() {
@@ -186,7 +187,7 @@ function checkCollisions() {
   }
   // player vs sheep
   if (isColliding(player.rect(), sheep.rect())) {
-    console.log('player colliding with sheep')
+    console.log('collision between player and sheep')
   }
   // player vs obstacles
   // ghosts vs game area
@@ -205,10 +206,10 @@ const gameWidth = 600
 const gameHeight = 400
 const spriteSize = 20
 const freezoneWidth = 50
-const playerSpeed = 10
+const playerSpeed = 6
 const initialObstacleCount = 3
 const gameAreaElement = document.getElementById('gameArea')
-const gameAreaRect = { x: 0, y: 0, width: gameWidth - spriteSize, height: gameHeight - spriteSize } // modified to get realistic collisions
+const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight } // modified to get realistic collisions
 const pressedKeys = {}
 
 // GameObjects, maybe these belong in an array on the Game instance
