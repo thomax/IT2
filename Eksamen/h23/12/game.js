@@ -70,6 +70,7 @@ class Player extends GameObject {
 
   increaseScore() {
     this.score += 1
+    this.element.innerText = this.score
   }
 
   carrySheep() {
@@ -79,6 +80,15 @@ class Player extends GameObject {
 }
 
 class Ghost extends GameObject {
+  constructor(x, y, element) {
+    super(x, y, element)
+    this.direction = randomBetween(0, 360)
+  }
+
+  changeDirection() {
+    // probably improve this into bounce direction
+    this.direction = randomBetween(0, 360)
+  }
 
 }
 
@@ -107,6 +117,7 @@ class Sheep extends GameObject {
 function initializeGame() {
   spawnPlayer()
   spawnSheep()
+  spawnGhost()
   for (let i = 0; i < initialObstacleCount; i++) {
     spawnObstacle()
   }
@@ -116,6 +127,15 @@ function initializeGame() {
 function spawnPlayer() {
   const element = document.getElementById('player')
   player = new Player(freezoneWidth / 2, gameHeight / 2, playerSpeed, element)
+}
+
+function spawnGhost() {
+  const element = document.createElement('div')
+  element.classList.add('ghost')
+  const x = randomBetween(freezoneWidth, gameWidth - freezoneWidth - spriteSize)
+  const y = randomBetween(0, gameHeight - spriteSize)
+  gameAreaElement.appendChild(element)
+  ghost = new Ghost(x, y, element)
 }
 
 function spawnSheep() {
@@ -154,14 +174,14 @@ function onKeyUp(event) {
 }
 
 function movePlayer() {
-  if (pressedKeys.w) {
-    player.moveInDirection(playerSpeed, 'up')
-  } else if (pressedKeys.a) {
-    player.moveInDirection(playerSpeed, 'left')
-  } else if (pressedKeys.d) {
-    player.moveInDirection(playerSpeed, 'right')
-  } else if (pressedKeys.s) {
-    player.moveInDirection(playerSpeed, 'down')
+  if (pressedKeys.w || pressedKeys.ArrowUp) {
+    player.moveInDirection(player.speed, 'up')
+  } else if (pressedKeys.a || pressedKeys.ArrowLeft) {
+    player.moveInDirection(player.speed, 'left')
+  } else if (pressedKeys.d || pressedKeys.ArrowRight) {
+    player.moveInDirection(player.speed, 'right')
+  } else if (pressedKeys.s || pressedKeys.ArrowDown) {
+    player.moveInDirection(player.speed, 'down')
   }
 }
 
@@ -185,12 +205,43 @@ function checkCollisions() {
   if (!isInside(player.rect(), gameAreaRect)) {
     player.revertToPreviousPosition()
   }
-  // player vs sheep
-  if (isColliding(player.rect(), sheep.rect())) {
+  // player pick up sheep
+  if (!player.isCarryingSheep && isColliding(player.rect(), sheep.rect())) {
     console.log('collision between player and sheep')
+    // plukke opp sauen
+    player.isCarryingSheep = true
+    sheep.isCarried = true
+    // fjerne sauen fra friområdet
+    sheep.element.remove()
+    // endre css på player
+    player.element.style.border = '3px solid black'
+    // redusere fart
+    player.changeSpeed(playerSpeed / 2)
+  }
+
+  // player drop off sheep
+  if (player.isCarryingSheep && isInside(player.rect(), freezoneLeftRect)) {
+    // fjerne border
+    player.element.style.border = 'none'
+    // øke speed
+    player.changeSpeed(playerSpeed)
+    // ikke carried
+    sheep.isCarried = false
+    player.isCarryingSheep = false
+    // ny sau
+    spawnSheep()
+    // endre score
+    player.increaseScore()
   }
   // player vs obstacles
+  obstacles.forEach(anObstacle => {
+    if (isColliding(player.rect(), anObstacle.rect())) {
+      player.revertToPreviousPosition()
+    }
+  })
   // ghosts vs game area
+
+
   // ghosts vs player
 }
 
@@ -210,6 +261,7 @@ const playerSpeed = 6
 const initialObstacleCount = 3
 const gameAreaElement = document.getElementById('gameArea')
 const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight } // modified to get realistic collisions
+const freezoneLeftRect = { x: 0, y: 0, width: freezoneWidth, height: gameHeight }
 const pressedKeys = {}
 
 // GameObjects, maybe these belong in an array on the Game instance
