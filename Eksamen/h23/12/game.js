@@ -215,7 +215,6 @@ function checkCollisions() {
   }
   // player pick up sheep
   if (!player.isCarryingSheep && isColliding(player.rect(), sheep.rect())) {
-    console.log('collision between player and sheep')
     // plukke opp sauen
     player.isCarryingSheep = true
     sheep.isCarried = true
@@ -240,6 +239,7 @@ function checkCollisions() {
     spawnSheep()
     // endre score
     player.increaseScore()
+    // legg til flere problemer
     spawnGhost()
     spawnObstacle()
   }
@@ -250,8 +250,8 @@ function checkCollisions() {
     }
   })
 
-  // ghosts vs game area
   ghosts.forEach(ghost => {
+    // ghosts vs game area
     if (!isInside(ghost.rect(), middleGameZoneRect)) {
       // ghost er utenfor
       ghost.revertToPreviousPosition()
@@ -263,7 +263,6 @@ function checkCollisions() {
       gameOver = true
     }
   })
-
 }
 
 function gameLoop() {
@@ -290,7 +289,7 @@ const playerSpeed = 6
 const ghostSpeed = 3
 const initialObstacleCount = 3
 const gameAreaElement = document.getElementById('gameArea')
-const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight } // modified to get realistic collisions
+const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight }
 const freezoneLeftRect = { x: 0, y: 0, width: freezoneWidth, height: gameHeight }
 const middleGameZoneRect = { x: freezoneWidth, y: 0, width: gameWidth - (freezoneWidth * 2), height: gameHeight }
 const pressedKeys = {}
