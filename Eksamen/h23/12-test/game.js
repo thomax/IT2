@@ -222,16 +222,16 @@ function moveGhosts() {
 
 // Move player, allowing diagonal movement. Not sure if this is a good idea
 function movePlayer() {
-  if (pressedKeys['w']) {
+  if (pressedKeys['w'] || pressedKeys.ArrowUp) {
     player.moveInDirection(player.speed, 'up')
   }
-  if (pressedKeys['s']) {
+  if (pressedKeys['s'] || pressedKeys.ArrowDown) {
     player.moveInDirection(player.speed, 'down')
   }
-  if (pressedKeys['a']) {
+  if (pressedKeys['a'] || pressedKeys.ArrowLeft) {
     player.moveInDirection(player.speed, 'left')
   }
-  if (pressedKeys['d']) {
+  if (pressedKeys['d'] || pressedKeys.ArrowRight) {
     player.moveInDirection(player.speed, 'right')
   }
 }

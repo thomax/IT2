@@ -80,8 +80,9 @@ class Player extends GameObject {
 }
 
 class Ghost extends GameObject {
-  constructor(x, y, element) {
+  constructor(x, y, speed, element) {
     super(x, y, element)
+    this.speed = speed
     this.direction = randomBetween(0, 360)
   }
 
@@ -135,7 +136,8 @@ function spawnGhost() {
   const x = randomBetween(freezoneWidth, gameWidth - freezoneWidth - spriteSize)
   const y = randomBetween(0, gameHeight - spriteSize)
   gameAreaElement.appendChild(element)
-  ghost = new Ghost(x, y, element)
+  ghost = new Ghost(x, y, ghostSpeed, element)
+  ghosts.push(ghost)
 }
 
 function spawnSheep() {
@@ -183,6 +185,12 @@ function movePlayer() {
   } else if (pressedKeys.s || pressedKeys.ArrowDown) {
     player.moveInDirection(player.speed, 'down')
   }
+}
+
+function moveGhost(ghost) {
+  const dx = Math.sin(ghost.direction) * ghost.speed
+  const dy = Math.cos(ghost.direction) * ghost.speed
+  ghost.move(dx, dy)
 }
 
 function isInside(innerRect, outerRect) {
@@ -239,15 +247,22 @@ function checkCollisions() {
       player.revertToPreviousPosition()
     }
   })
-  // ghosts vs game area
 
+  // ghosts vs game area
+  ghosts.forEach(ghost => {
+    if (!isInside(ghost.rect(), outer)) {
+      // ghost er utenfor
+    }
+  })
 
   // ghosts vs player
 }
 
 function gameLoop() {
   movePlayer()
-  // moveGhosts()
+  ghosts.forEach(ghost => {
+    moveGhost(ghost)
+  })
   checkCollisions()
   window.requestAnimationFrame(gameLoop)
 }
@@ -258,14 +273,17 @@ const gameHeight = 400
 const spriteSize = 20
 const freezoneWidth = 50
 const playerSpeed = 6
+const ghostSpeed = 3
 const initialObstacleCount = 3
 const gameAreaElement = document.getElementById('gameArea')
 const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight } // modified to get realistic collisions
 const freezoneLeftRect = { x: 0, y: 0, width: freezoneWidth, height: gameHeight }
+const middleGameZoneRect = {}
 const pressedKeys = {}
 
 // GameObjects, maybe these belong in an array on the Game instance
 const obstacles = []
+const ghosts = []
 let sheep
 let player
 
