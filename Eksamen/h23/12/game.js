@@ -240,6 +240,8 @@ function checkCollisions() {
     spawnSheep()
     // endre score
     player.increaseScore()
+    spawnGhost()
+    spawnObstacle()
   }
   // player vs obstacles
   obstacles.forEach(anObstacle => {
@@ -250,21 +252,33 @@ function checkCollisions() {
 
   // ghosts vs game area
   ghosts.forEach(ghost => {
-    if (!isInside(ghost.rect(), outer)) {
+    if (!isInside(ghost.rect(), middleGameZoneRect)) {
       // ghost er utenfor
+      ghost.revertToPreviousPosition()
+      ghost.changeDirection()
+    }
+
+    // ghosts vs player
+    if (isColliding(ghost.rect(), player.rect())) {
+      gameOver = true
     }
   })
 
-  // ghosts vs player
 }
 
 function gameLoop() {
-  movePlayer()
-  ghosts.forEach(ghost => {
-    moveGhost(ghost)
-  })
-  checkCollisions()
-  window.requestAnimationFrame(gameLoop)
+  if (gameOver) {
+    // handle game over
+    alert("game over")
+  } else {
+    // keep playing
+    movePlayer()
+    ghosts.forEach(ghost => {
+      moveGhost(ghost)
+    })
+    checkCollisions()
+    window.requestAnimationFrame(gameLoop)
+  }
 }
 
 
@@ -278,8 +292,9 @@ const initialObstacleCount = 3
 const gameAreaElement = document.getElementById('gameArea')
 const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight } // modified to get realistic collisions
 const freezoneLeftRect = { x: 0, y: 0, width: freezoneWidth, height: gameHeight }
-const middleGameZoneRect = {}
+const middleGameZoneRect = { x: freezoneWidth, y: 0, width: gameWidth - (freezoneWidth * 2), height: gameHeight }
 const pressedKeys = {}
+let gameOver = false
 
 // GameObjects, maybe these belong in an array on the Game instance
 const obstacles = []
