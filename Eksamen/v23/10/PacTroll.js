@@ -168,14 +168,19 @@ function isColliding(rect1, rect2) {
 }
 
 function ensureNoCollisions(thing) {
+  while (isColliding(thing.rect(), player.rect())) {
+    const { x, y } = randomCoordinates()
+    console.log('reposition because of collision with player')
+    thing.positionAt(x, y)
+  }
   while (foods.some(food => isColliding(thing.rect(), food.rect()))) {
     const { x, y } = randomCoordinates()
-    console.log('reposition food because of collision with other food')
+    console.log('reposition because of collision with other food')
     thing.positionAt(x, y)
   }
   while (obstacles.some(obstacle => isColliding(thing.rect(), obstacle.rect()))) {
     const { x, y } = randomCoordinates()
-    console.log('reposition food because of collision with obstacle')
+    console.log('reposition because of collision with obstacle')
     thing.positionAt(x, y)
   }
 }
@@ -202,13 +207,14 @@ function checkCollisions() {
       player.increaseScore()
       // increase player speed
       player.changeSpeed(player.speed + 0.5)
-      // remove food
+      // remove food from array
       foods.splice(foods.indexOf(food), 1)
+      // remove food from DOM
       food.element.remove()
       // spawn obstacle at food location, but with delay to avoid immediate collision
       setTimeout(() => {
         spawnObstacle(food.x, food.y)
-      }, 500)
+      }, 300)
       // spawn new food
       spawnFood()
     }
