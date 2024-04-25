@@ -1,0 +1,42 @@
+#gameArea {
+  position: relative;
+  background-color: black;
+  width: 1000px;
+  height: 600px;
+}
+
+#troll {
+  position: absolute;
+  background-color: green;
+  left: 50%;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+}
+
+#score {
+  color: rgba(200, 200, 200, 0.243);
+  padding-top: 20%;
+  text-align: center;
+  font-size: 8rem;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#message {
+  font-size: 3em;
+  position: relative;
+}
+
+.food {
+  background-color: yellow;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+}
+
+.obstacle {
+  background-color: white;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+}

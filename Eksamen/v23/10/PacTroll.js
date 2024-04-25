@@ -1,13 +1,8 @@
-class Game {
-
-}
 
 class GameObject {
   constructor(x, y, element) {
     this.x = x
     this.y = y
-    this.previousX = x
-    this.previousX = y
     this.element = element
     this.positionAt(this.x, this.y)
   }
@@ -16,8 +11,8 @@ class GameObject {
     return {
       x: this.x,
       y: this.y,
-      width: spriteSize,
-      height: spriteSize
+      width: spriteSizeFood,
+      height: spriteSizeFood
     }
   }
 
@@ -28,25 +23,23 @@ class GameObject {
     this.element.style.top = this.y + 'px'
   }
 
-  move(dx, dy) {
-    this.previousX = this.x
-    this.previousY = this.y
-    this.x += dx
-    this.y += dy
-    this.positionAt(this.x, this.y)
-  }
-
-  revertToPreviousPosition() {
-    this.positionAt(this.previousX, this.previousY)
-  }
 }
 
-class Player extends GameObject {
+class Troll extends GameObject {
   constructor(x, y, speed, element) {
     super(x, y, element)
     this.speed = speed
     this.score = 0
-    this.currentDirection = 'right'
+    this.currentDirection = undefined
+  }
+
+  rect() {
+    return {
+      x: this.x,
+      y: this.y,
+      width: spriteSizeTroll,
+      height: spriteSizeTroll
+    }
   }
 
   moveInCurrentDirection() {
@@ -64,13 +57,19 @@ class Player extends GameObject {
     }
   }
 
+  move(dx, dy) {
+    this.x += dx
+    this.y += dy
+    this.positionAt(this.x, this.y)
+  }
+
   changeSpeed(newSpeed) {
     this.speed = newSpeed
   }
 
   increaseScore() {
     this.score += 1
-    this.element.innerText = this.score
+    scoreElement.innerText = this.score
   }
 }
 
@@ -89,18 +88,18 @@ class Obstacle extends GameObject {
 
 // all setup goes here
 function initializeGame() {
-  spawnPlayer()
+  spawnTroll()
   for (let i = 0; i < initialFoodCount; i++) {
     spawnFood()
   }
   gameLoop()
 }
 
-function spawnPlayer() {
-  const element = document.getElementById('player')
+function spawnTroll() {
+  const element = document.getElementById('troll')
   const x = gameAreaRect.width / 2
   const y = gameAreaRect.height / 2
-  player = new Player(x, y, initialPlayerSpeed, element)
+  troll = new Troll(x, y, initialTrollSpeed, element)
 }
 
 function spawnFood() {
@@ -127,8 +126,8 @@ function randomBetween(min, max) {
 
 function randomCoordinates() {
   return {
-    x: randomBetween(gameAreaRect.x, gameAreaRect.width - spriteSize),
-    y: randomBetween(gameAreaRect.y, gameAreaRect.height - spriteSize)
+    x: randomBetween(gameAreaRect.x, gameAreaRect.width - spriteSizeTroll),
+    y: randomBetween(gameAreaRect.y, gameAreaRect.height - spriteSizeTroll)
   }
 }
 
@@ -136,19 +135,19 @@ function onKeyDown(event) {
   switch (event.code) {
     case 'KeyW':
     case 'ArrowUp':
-      player.currentDirection = 'up'
+      troll.currentDirection = 'up'
       break
     case 'KeyA':
     case 'ArrowLeft':
-      player.currentDirection = 'left'
+      troll.currentDirection = 'left'
       break
     case 'KeyD':
     case 'ArrowRight':
-      player.currentDirection = 'right'
+      troll.currentDirection = 'right'
       break
     case 'KeyS':
     case 'ArrowDown':
-      player.currentDirection = 'down'
+      troll.currentDirection = 'down'
       break
   }
 }
@@ -168,16 +167,18 @@ function isColliding(rect1, rect2) {
 }
 
 function ensureNoCollisions(thing) {
-  while (isColliding(thing.rect(), player.rect())) {
+  while (isColliding(thing.rect(), troll.rect())) {
     const { x, y } = randomCoordinates()
-    console.log('reposition because of collision with player')
+    console.log('reposition because of collision with troll')
     thing.positionAt(x, y)
   }
+
   while (foods.some(food => isColliding(thing.rect(), food.rect()))) {
     const { x, y } = randomCoordinates()
     console.log('reposition because of collision with other food')
     thing.positionAt(x, y)
   }
+
   while (obstacles.some(obstacle => isColliding(thing.rect(), obstacle.rect()))) {
     const { x, y } = randomCoordinates()
     console.log('reposition because of collision with obstacle')
@@ -187,26 +188,25 @@ function ensureNoCollisions(thing) {
 
 
 function checkCollisions() {
-  // player vs gameArea
-  if (!isInside(player.rect(), gameAreaRect)) {
-    //player.revertToPreviousPosition()
+  // troll vs gameArea
+  if (!isInside(troll.rect(), gameAreaRect)) {
     gameOver = true
-    gameOverReason = 'Player left game area'
+    gameOverReason = 'Troll left game area'
   }
-  //player vs obstacles
+  //troll vs obstacles
   obstacles.forEach(anObstacle => {
-    if (isColliding(player.rect(), anObstacle.rect())) {
+    if (isColliding(troll.rect(), anObstacle.rect())) {
       gameOver = true
-      gameOverReason = 'Player hit an obstacle'
+      gameOverReason = 'Troll hit an obstacle'
     }
   })
 
-  //player vs food
+  //troll vs food
   foods.forEach(food => {
-    if (isColliding(player.rect(), food.rect())) {
-      player.increaseScore()
-      // increase player speed
-      player.changeSpeed(player.speed + 0.5)
+    if (isColliding(troll.rect(), food.rect())) {
+      troll.increaseScore()
+      // increase troll speed
+      troll.changeSpeed(troll.speed + speedIncrement)
       // remove food from array
       foods.splice(foods.indexOf(food), 1)
       // remove food from DOM
@@ -214,7 +214,7 @@ function checkCollisions() {
       // spawn obstacle at food location, but with delay to avoid immediate collision
       setTimeout(() => {
         spawnObstacle(food.x, food.y)
-      }, 300)
+      }, 400)
       // spawn new food
       spawnFood()
     }
@@ -229,29 +229,31 @@ function gameLoop() {
     element.innerText = `Game over: ${gameOverReason}`
   } else {
     // keep playing
-    player.moveInCurrentDirection()
+    troll.moveInCurrentDirection()
     checkCollisions()
     window.requestAnimationFrame(gameLoop)
   }
 }
 
-const gameWidth = 600
-const gameHeight = 400
+const gameWidth = 1200
+const gameHeight = 600
 const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight }
 const gameAreaElement = document.getElementById('gameArea')
+const scoreElement = document.getElementById('score')
 
-const spriteSize = 20
-const initialPlayerSpeed = 2
-const initialFoodCount = 3
+const spriteSizeTroll = 15
+const spriteSizeFood = 10
+const initialFoodCount = 1000
+const initialTrollSpeed = 2
+const speedIncrement = 0.05
 
-let currentKey = undefined
 let gameOver = false
 let gameOverReason = ''
 
 // GameObjects, maybe these belong in an array on the Game instance
 const obstacles = []
 const foods = []
-let player
+let troll
 
 document.addEventListener('keydown', onKeyDown)
 
