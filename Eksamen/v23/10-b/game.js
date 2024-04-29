@@ -45,6 +45,7 @@ class Troll extends GameObject {
 
   increaseScore() {
     this.score++
+    scoreElement.innerText = this.score
   }
 
   increseSpeed() {
@@ -64,10 +65,17 @@ class Obstacle extends GameObject {
   }
 }
 
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min
+}
+
 function initializeGame() {
   // spawn whatever
   spawnTroll()
   // spawn food
+  for (let n = 0; n < initialFoodCount; n++) {
+    spawnFood()
+  }
   gameLoop()
 }
 
@@ -83,6 +91,18 @@ function gameLoop() {
       gameOverReason = 'You left the game area'
     }
     // check food collision
+    foods.forEach((food, index) => {
+      if (isColliding(food.rect(), troll.rect())) {
+        // goooood stemning
+        troll.increaseScore()
+        troll.increseSpeed(speedIncrement)
+        // remove food
+        food.element.remove()
+        foods.splice(index, 1)
+        // spawn obstacle
+        spawnObstacle(food.x, food.y)
+      }
+    })
     // check obstacle collision
     window.requestAnimationFrame(gameLoop)
   }
@@ -92,6 +112,25 @@ function spawnTroll() {
   const element = document.getElementById('troll')
   troll = new Troll(gameWidth / 2, gameHeight / 2, trollInitialSpeed, element)
 }
+
+function spawnFood() {
+  const element = document.createElement('div')
+  element.classList.add('food')
+  gameAreaElement.appendChild(element)
+  const x = randomBetween(0, gameWidth - spriteSize)
+  const y = randomBetween(0, gameHeight - spriteSize)
+  food = new Food(x, y, element)
+  foods.push(food)
+}
+
+function spawnObstacle(x, y) {
+  const element = document.createElement('div')
+  element.classList.add('obstacle')
+  gameAreaElement.appendChild(element)
+  obstacle = new Obstacle(x, y, element)
+  obstacles.push(obstacle)
+}
+
 
 function isInside(innerRect, outerRect) {
   return innerRect.x >= outerRect.x &&
@@ -122,7 +161,7 @@ function onKeyDown(event) {
 const spriteSize = 15
 const trollInitialSpeed = 2
 const speedIncrement = 1
-
+const initialFoodCount = 3
 const gameWidth = 1000
 const gameHeight = 600
 const gameAreaRect = { x: 0, y: 0, width: gameWidth, height: gameHeight }
@@ -130,6 +169,9 @@ const gameAreaElement = document.getElementById('gameArea')
 const scoreElement = document.getElementById('score')
 const messageElement = document.getElementById('message')
 document.addEventListener('keydown', onKeyDown)
+
+const foods = []
+const obstacles = []
 
 let gameOver = false
 let troll
