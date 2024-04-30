@@ -99,11 +99,22 @@ function gameLoop() {
         // remove food
         food.element.remove()
         foods.splice(index, 1)
-        // spawn obstacle
-        spawnObstacle(food.x, food.y)
+        // spawn obstacle, but wait to avoid instakill
+        setTimeout(() => {
+          spawnObstacle(food.x, food.y)
+        }, 500)
+        spawnFood()
       }
     })
+
     // check obstacle collision
+    obstacles.forEach(obstacle => {
+      if (isColliding(obstacle.rect(), troll.rect())) {
+        gameOver = true
+        gameOverReason = 'You hit an obstacle'
+      }
+    })
+
     window.requestAnimationFrame(gameLoop)
   }
 }
@@ -119,8 +130,23 @@ function spawnFood() {
   gameAreaElement.appendChild(element)
   const x = randomBetween(0, gameWidth - spriteSize)
   const y = randomBetween(0, gameHeight - spriteSize)
-  food = new Food(x, y, element)
+  const food = new Food(x, y, element)
+
+  const allTheThings = foods.concat(obstacles).concat([troll])
+  ensureItemNotOverlappingWithThings(food, allTheThings)
+
   foods.push(food)
+}
+
+function ensureItemNotOverlappingWithThings(item, things) {
+  things.forEach(thing => {
+    while (isColliding(thing.rect(), item.rect())) {
+      console.log('overlapping, reposition')
+      const x = randomBetween(0, gameWidth - spriteSize)
+      const y = randomBetween(0, gameHeight - spriteSize)
+      item.positionAt(x, y)
+    }
+  })
 }
 
 function spawnObstacle(x, y) {
