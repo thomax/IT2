@@ -2,7 +2,7 @@
 
 1. Last ned og staller Ollama: https://ollama.com/
    - Hvorfor heter dette "Ollama"??
-2. Åpne ledetekst/cmd, og skriv ollama run tinyllama
+2. Åpne ledetekst/cmd, og skriv `ollama run tinyllama`
 3. Booom! Du har din egen chatbot!!
 
 Funker? Vi skal nå kjøre Ollama som en server:
@@ -16,7 +16,6 @@ NB: Du må også åpne et nytt cmd-vindu før du kaller `ollama serve`
 ```
 set OLLAMA_ORIGINS=*
 set OLLAMA_HOST=127.0.0.1:11434
-ollama serve
 ```
 
 ## Windows 11 (Powershell)
@@ -24,14 +23,13 @@ ollama serve
 ```
 setx OLLAMA_ORIGINS *
 setx OLLAMA_HOST 127.0.0.1:11434
-ollama serve
 ```
 
-Etter å ha gjort dette, må du åpne
+Etter å ha gjort dette, må du åpne et nytt vindu/ny tab i ledetekst, og skrive `ollama serve` for å starte en chatbot server.
 
 Bruke Ollama-APIet, her finner du dokumentasjon: https://github.com/ollama/ollama/blob/main/docs/api.md
 
-Koden under burde hjelpe deg i å komme i gang med API-et. Lag din egen KI-chat. Lykke til!
+Koden under kan hjelpe deg til å komme i gang med API-et. Lag din egen chatbot, kanskje? Lykke til!
 
 ```js
 const apiUrl = 'http://127.0.0.1:11434/api/generate'
