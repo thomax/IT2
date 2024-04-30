@@ -1,7 +1,7 @@
 # Hvordan sette opp en chatbot på din egen maksin
 
 1. Last ned og staller Ollama: https://ollama.com/
-   a. Hvorfor heter dette "Ollama"??
+   - Hvorfor heter dette "Ollama"??
 2. Åpne ledetekst/cmd, og skriv ollama run tinyllama
 3. Booom! Du har din egen chatbot!!
 
