@@ -15,6 +15,10 @@ body {
   padding: 15px;
 }
 
+#cellCount {
+  float: right
+}
+
 .cell {
   position: absolute;
   border-right: 1px solid gainsboro;

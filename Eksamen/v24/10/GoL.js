@@ -129,6 +129,8 @@ function renderGameState(gameState) {
       cell.updateView(cellElements[x][y])
     }
   }
+  const numberOfLivingCells = gameState.flat().filter(cell => cell.isAlive).length
+  document.getElementById('cellCount').innerText = `Living cells: ${numberOfLivingCells}`
 }
 
 function calculateNextGameState() {
