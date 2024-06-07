@@ -21,10 +21,12 @@ class Cell {
     this.isAlive = state
   }
 
+  // Flip state from dead to alive or vice versa
   toggleState() {
     this.isAlive = !this.isAlive
   }
 
+  // Update styles for the matching cell element
   updateView(element) {
     if (this.isAlive) {
       element.setAttribute("class", "cell alive")
@@ -38,7 +40,8 @@ class Cell {
     for (let x = this.x - 1; x <= this.x + 1; x++) {
       for (let y = this.y - 1; y <= this.y + 1; y++) {
         if (x >= 0 && x < numberOfColumns && y >= 0 && y < numberOfRows && !(x === this.x && y === this.y)) {
-          if (currentGameState[x][y].isAlive) {
+          const neighborCell = currentGameState[x][y]
+          if (neighborCell.isAlive) {
             livingNeighbors++
           }
         }
@@ -50,7 +53,9 @@ class Cell {
   // return a new cell object based on its current neighbors
   nextGenerationCell() {
     const livingNeighbors = this.countLivingNeighbors()
+    // create an exact copy of the current cell
     const nextCell = new Cell(this.x, this.y, this.isAlive)
+    // Modify the copy based on the rules of the game
     if (this.isAlive) {
       if (livingNeighbors < 2 || livingNeighbors > 3) {
         nextCell.isAlive = false
@@ -93,46 +98,30 @@ function handleIntervalChange(value) {
   document.getElementById('intervalValue').innerText = `Interval: ${updateInterval} ms`
 }
 
-// Toggle cell state from UI click
+// Toggle cell state from UI cell click
 function handleToggleStateForCellAt(x, y) {
   const cell = currentGameState[x][y]
   cell.toggleState()
   cell.updateView(cellElements[x][y])
-  console.log(x, y, cell.isAlive ? "alive" : "dead")
+  console.log(x, y, 'is now', cell.isAlive ? "alive" : "dead")
 }
 
+// Create a new cell element at a given position
 function createElementAt(x, y) {
   const element = document.createElement('div')
   element.style.width = `${cellSize}px`
   element.style.height = `${cellSize}px`
   element.style.left = `${x * cellSize}px`
   element.style.top = `${y * cellSize}px`
-  element.classList.add('cell')
   gameAreaElement.appendChild(element)
+  // make the cell clickable, toggle its state
   element.addEventListener('click', () => {
     handleToggleStateForCellAt(x, y)
   })
   return element
 }
 
-
-function initializeGame() {
-  currentGameState = []
-  cellElements = []
-  gameAreaElement.innerHTML = ''
-  for (let x = 0; x < numberOfColumns; x++) {
-    currentGameState[x] = []
-    cellElements[x] = []
-    for (let y = 0; y < numberOfRows; y++) {
-      const cell = new Cell(x, y, Math.random() > 0.66)
-      const cellElement = createElementAt(x, y)
-      cellElements[x][y] = cellElement
-      currentGameState[x][y] = cell
-      cell.updateView(cellElement)
-    }
-  }
-}
-
+// Update html element for each cell
 function renderGameState(gameState) {
   for (let x = 0; x < numberOfColumns; x++) {
     for (let y = 0; y < numberOfRows; y++) {
@@ -154,12 +143,31 @@ function calculateNextGameState() {
   return nextGameState
 }
 
+function initializeGame() {
+  currentGameState = []
+  cellElements = []
+  gameAreaElement.innerHTML = ''
+  for (let x = 0; x < numberOfColumns; x++) {
+    currentGameState[x] = []
+    cellElements[x] = []
+    for (let y = 0; y < numberOfRows; y++) {
+      const cell = new Cell(x, y, Math.random() > 0.66)
+      currentGameState[x][y] = cell
+      const cellElement = createElementAt(x, y)
+      cellElements[x][y] = cellElement
+      cell.updateView(cellElement)
+    }
+  }
+}
+
 function gameLoop() {
   if (!gamePaused) {
     const nextGameState = calculateNextGameState()
     renderGameState(nextGameState)
     currentGameState = nextGameState
   }
+
+  // Make the game run slower
   setTimeout(() => {
     window.requestAnimationFrame(gameLoop)
   }, updateInterval)
