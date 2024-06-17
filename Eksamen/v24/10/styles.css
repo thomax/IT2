@@ -26,7 +26,7 @@ body {
 }
 
 .alive {
-  background-color: rgb(59, 190, 59);
+  background-color: rgba(11, 181, 11, 0.7);
 }
 
 .empty {
